@@ -19,6 +19,14 @@ post '/arts' => sub {
 
     print Dumper({request->params});
     print Dumper($all_uploads);
+
+    my $size     = request->upload('upload')->size;
+    my $filename = request->upload('upload')->filename;
+    my $tempname = request->upload('upload')->tempname;
+    my $email    = request->param('email');
+    my $jobid    = 42;
+    
+    template upload => { filename => $filename, size => $size, email => $email, jobid => $jobid };
 };
 
 true;

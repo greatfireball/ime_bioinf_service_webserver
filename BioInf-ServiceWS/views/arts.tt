@@ -149,11 +149,8 @@
 
 <form name="artsinput" action="arts" method="post" enctype="multipart/form-data">
   <p>
-    <input type="hidden" name="UserBrowser" value="">
+    <label>Please specify your email address: <input type="email" name="email"/></label><br />
     <label>Please upload your file here: <input type="file" name="upload"/></label><br />
     <input type="submit" value="submit"><br />
   </p>
-  <script type="text/javascript">
-    document.artsinput.UserBrowser.value = navigator.appName;
-  </script>
 </form>
