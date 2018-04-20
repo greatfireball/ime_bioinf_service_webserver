@@ -1,3 +1,10 @@
-You uploaded <% filename %> with a file size of <% size %>.
-<br />
-Your jobid is <% jobid %> and an email will be sent to <% email %> after finishing the job.
+<div id="page">
+  <h1>JOB submission result for <% analysisname %></h1>
+
+  <p>
+    You uploaded <% filename %> with a file size of <% size %>.
+  </p>
+  <p>
+    Your jobid is <% jobid %> and an email will be sent to <a href="mailto:<% email %>"><% email %></a> after finishing the job.
+  </p>
+</div>

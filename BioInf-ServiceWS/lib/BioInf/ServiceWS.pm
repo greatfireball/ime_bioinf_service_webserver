@@ -26,7 +26,7 @@ post '/arts' => sub {
     my $email    = request->param('email');
     my $jobid    = 42;
     
-    template upload => { filename => $filename, size => $size, email => $email, jobid => $jobid };
+    template upload => { filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS" };
 };
 
 true;
