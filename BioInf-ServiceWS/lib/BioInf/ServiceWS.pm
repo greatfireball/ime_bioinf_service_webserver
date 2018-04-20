@@ -33,6 +33,21 @@ post '/arts' => sub {
     # generate the jobid based on email, filename, size and checksum of the input file
     my $jobid    = get_jobid($email, $filename, $sizeinbyte, $checksum);
 
+    # store file
+    my $jobfile     = "/upload/$jobid";
+    my $jobmetafile = $jobfile.".metadata";
+
+    my $metadata = {
+	email    => $email,
+	filename => $filename,
+	size     => $sizeinbyte,
+	checksum => $checksum,
+    };
+    request->upload('upload')->copy_to($jobfile);
+    open(FH, ">", $jobmetafile) || die "Unable to open '$jobmetafile': $!\n";
+    print FH to_json($metadata);
+    close(FH) || die "Unable to close '$jobmetafile': $!\n";
+
     template upload => { filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS", checksum => $checksum };
 };
 
