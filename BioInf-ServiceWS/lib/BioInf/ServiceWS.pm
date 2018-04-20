@@ -35,8 +35,10 @@ post '/arts' => sub {
     my $jobid    = get_jobid($email, $filename, $sizeinbyte, $checksum, $timestamp);
 
     # store file
-    my $jobfile     = "/upload/$jobid";
-    my $jobmetafile = $jobfile.".metadata";
+    my $jobfolder   = "/upload/$jobid";
+    mkdir $jobfolder || die "Unable to create $jobfolder: $!\n";
+    my $jobfile     = $jobfolder."/content.bin";
+    my $jobmetafile = $jobfolder."/metadata.json";
 
     my $metadata = {
 	email     => $email,
