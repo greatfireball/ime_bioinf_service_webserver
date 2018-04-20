@@ -1,29 +1,16 @@
-
-<!--
-    Credit goes to the Ruby on Rails team for this page
-    has been heavily based on the default Rails page that is
-    built with a scaffolded application.
-
-    Thanks a lot to them for their work.
-
-    See Ruby on Rails if you want a kickass framework in Ruby:
-    http://www.rubyonrails.org/
--->
-
 <div id="page">
       <div id="sidebar">
         <ul id="sidebar-items">
           <li>
-            <h3>Join the community</h3>
+            <h3>Starting your analyse</h3>
             <ul class="links">
 
-              <li><a href="http://perldancer.org/">PerlDancer</a></li>
-              <li><a href="http://twitter.com/PerlDancer/">Official Twitter</a></li>
-              <li><a href="https://github.com/PerlDancer/Dancer2/">GitHub Community</a></li>
+              <li><a href="arts">ARTS</a></li>
+              <li><a href="antismash">Antismash</a></li>
             </ul>
           </li>
 
-          <li>
+<!--          <li>
             <h3>Browse the documentation</h3>
 
             <ul class="links">
@@ -46,57 +33,31 @@
                 <li>Environment: <span class="app-info"><% settings.environment %></span></li>
             </ul>
 
-          </li>
+          </li> 
+-->
         </ul>
 
       </div>
 
       <div id="content">
         <div id="header">
-          <h1>Perl is dancing</h1>
-          <h2>You&rsquo;ve joined the dance floor!</h2>
+          <h1>IME-BR BioInf Service Page</h1>
+          <h2></h2>
         </div>
 
         <div id="getting-started">
           <h1>Getting started</h1>
-          <h2>Here&rsquo;s how to get dancing:</h2>
 
-          <h3><a href="#" id="about_env_link">About your application's environment</a></h3>
-
-          <div id="about-content" style="display: none;">
-            <table>
-                <tbody>
-                <tr>
-                    <td>Perl version</td>
-                    <td><span class="app-info"><% perl_version %></span></td>
-                </tr>
-                <tr>
-                    <td>Dancer2 version</td>
-                    <td><span class="app-info"><% dancer_version %></span></td>
-                </tr>
-                <tr>
-                    <td>Backend</td>
-                    <td><span class="app-info"><% settings.apphandler %></span></td>
-                </tr>
-                <tr>
-                    <td>Appdir</td>
-                    <td><span class="filepath">/data/BioInf-ServiceWS</span></td>
-                </tr>
-                <tr>
-                    <td>Template engine</td>
-                    <td><span class="app-info"><% settings.template %></span></td>
-                </tr>
-                <tr>
-                    <td>Logger engine</td>
-                    <td><span class="app-info"><% settings.logger %></span></td>
-                </tr>
-                <tr>
-                    <td>Running environment</td>
-                    <td><span class="app-info"><% settings.environment %></span></td>
-                </tr>
-                </tbody>
-            </table>
-          </div>
+            <h2>Start your own analysis run</h2>
+	    
+            <p>
+	      Just open an analysis window(,
+	      eg. <a href="arts">ARTS</a>) and submit the required
+	      information. Your job will processed and you will be
+	      informed where to download/view the results via email.
+            </p>
+	  
+        </div>
 
     <script type="text/javascript">
     $('#about_env_link').click(function() {
@@ -108,7 +69,7 @@
     </script>
 
 
-          <ol>
+<!--          <ol>
             <li>
               <h2>Tune your application</h2>
 
@@ -142,7 +103,7 @@
               </p>
             </li>
 
-          </ol>
+          </ol> -->
         </div>
       </div>
     </div>
