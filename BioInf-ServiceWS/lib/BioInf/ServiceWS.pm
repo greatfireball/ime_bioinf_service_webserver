@@ -31,17 +31,19 @@ post '/arts' => sub {
     my $checksum = generate_md5($tempname);
 
     # generate the jobid based on email, filename, size and checksum of the input file
-    my $jobid    = get_jobid($email, $filename, $sizeinbyte, $checksum);
+    my $timestamp = time;
+    my $jobid    = get_jobid($email, $filename, $sizeinbyte, $checksum, $timestamp);
 
     # store file
     my $jobfile     = "/upload/$jobid";
     my $jobmetafile = $jobfile.".metadata";
 
     my $metadata = {
-	email    => $email,
-	filename => $filename,
-	size     => $sizeinbyte,
-	checksum => $checksum,
+	email     => $email,
+	filename  => $filename,
+	size      => $sizeinbyte,
+	checksum  => $checksum,
+	timestamp => $timestamp,
     };
     request->upload('upload')->copy_to($jobfile);
     open(FH, ">", $jobmetafile) || die "Unable to open '$jobmetafile': $!\n";
@@ -69,10 +71,10 @@ sub generate_md5
 
 sub get_jobid
 {
-    my ($email, $filename, $size, $checksum) = @_;
+    my ($email, $filename, $size, $checksum, $timestamp) = @_;
 
     my $key = "hrqfsV"; # random value
-    my $data = join("\t", $email, $filename, $size, $checksum, time);
+    my $data = join("\t", $email, $filename, $size, $checksum, $timestamp);
 
     my $jobid =  hmac_sha256_hex($data, $key);
 
