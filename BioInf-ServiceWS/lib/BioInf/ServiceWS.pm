@@ -20,11 +20,11 @@ post '/arts' => sub {
     print Dumper({request->params});
     print Dumper($all_uploads);
 
-    my $size     = request->upload('upload')->size;
-    my $filename = request->upload('upload')->filename;
-    my $tempname = request->upload('upload')->tempname;
-    my $email    = request->param('email');
-    my $jobid    = 42;
+    my $sizeinbyte = request->upload('upload')->size;
+    my $size       = human_readable_size($sizeinbyte);
+    my $filename   = request->upload('upload')->filename;
+    my $tempname   = request->upload('upload')->tempname;
+    my $email      = request->param('email');
 
     # calculate a checksum for the uploaded file
     my $checksum = generate_md5($tempname);
@@ -46,6 +46,39 @@ sub generate_md5
     close(FH) || die "Unable to close file: '$filename': $!\n";
 
     return $ctx->hexdigest;
+}
+
+sub human_readable_size
+{
+    my ($size) = @_;
+
+    my %prefix = (
+	"G" => 2**30,
+	"M" => 2**20,
+	"K" => 2**10,
+	""  => 2**0,
+	);
+    my @order = sort {$prefix{$b} <=> $prefix{$a} } (keys %prefix);
+
+    my $prefix_estimated = "";
+    foreach (@order)
+    {
+	if ($size/$prefix{$_}>1)
+	{
+	    $prefix_estimated = $_;
+	    last;
+	}
+    }
+
+    my $human_size;
+    my $number_format = "%d %sByte";
+    if ($prefix_estimated)
+    {
+	$number_format = "%.1f %sByte";
+    }
+    $human_size = sprintf($number_format, ($size/$prefix{$prefix_estimated}), $prefix_estimated);
+
+    return $human_size;
 }
 
 true;
