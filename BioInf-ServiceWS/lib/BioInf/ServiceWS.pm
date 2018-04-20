@@ -12,9 +12,13 @@ get '/arts' => sub {
 };
 
 post '/arts' => sub {
+
+    my $all_uploads = request->uploads;
+    
     use Data::Dumper;
 
     print Dumper({request->params});
+    print Dumper($all_uploads);
 };
 
 true;

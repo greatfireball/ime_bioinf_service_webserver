@@ -147,12 +147,11 @@
     </div>
 -->
 
-<form name="artsinput" action="arts" method="post">
+<form name="artsinput" action="arts" method="post" enctype="multipart/form-data">
   <p>
     <input type="hidden" name="UserBrowser" value="">
-    Ihr Kommentar:<br />
-    <textarea name="UserKommentar" rows="2" cols="20"></textarea><br />
-    <input type="submit" value="senden"><br />
+    <label>Please upload your file here: <input type="file" name="upload"/></label><br />
+    <input type="submit" value="submit"><br />
   </p>
   <script type="text/javascript">
     document.artsinput.UserBrowser.value = navigator.appName;
