@@ -1,5 +1,6 @@
 package BioInf::ServiceWS;
 use Dancer2;
+use Digest::SHA qw(hmac_sha256_hex);
 use Digest::MD5;
 
 our $VERSION = '0.1';
@@ -15,7 +16,7 @@ get '/arts' => sub {
 post '/arts' => sub {
 
     my $all_uploads = request->uploads;
-    
+
     use Data::Dumper;
     print Dumper({request->params});
     print Dumper($all_uploads);
@@ -28,6 +29,9 @@ post '/arts' => sub {
 
     # calculate a checksum for the uploaded file
     my $checksum = generate_md5($tempname);
+
+    # generate the jobid based on email, filename, size and checksum of the input file
+    my $jobid    = get_jobid($email, $filename, $sizeinbyte, $checksum);
 
     template upload => { filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS", checksum => $checksum };
 };
@@ -46,6 +50,18 @@ sub generate_md5
     close(FH) || die "Unable to close file: '$filename': $!\n";
 
     return $ctx->hexdigest;
+}
+
+sub get_jobid
+{
+    my ($email, $filename, $size, $checksum) = @_;
+
+    my $key = "hrqfsV"; # random value
+    my $data = join("\t", $email, $filename, $size, $checksum, time);
+
+    my $jobid =  hmac_sha256_hex($data, $key);
+
+    return($jobid);
 }
 
 sub human_readable_size
