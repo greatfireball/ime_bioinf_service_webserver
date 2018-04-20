@@ -7,4 +7,14 @@ get '/' => sub {
     template 'index' => { 'title' => 'BioInf::ServiceWS' };
 };
 
+get '/arts' => sub {
+    template 'arts';
+};
+
+post '/arts' => sub {
+    use Data::Dumper;
+
+    print Dumper({request->params});
+};
+
 true;
