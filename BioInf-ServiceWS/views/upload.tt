@@ -1,6 +1,8 @@
 <div id="page">
   <h1>JOB submission result for <% analysisname %></h1>
-
+  <p>
+    Your job <% jobname %> was delivered.
+  </p>
   <p>
     You uploaded <% filename %> with a md5 checksum of <% checksum %> and a file size of <% size %>.
   </p>

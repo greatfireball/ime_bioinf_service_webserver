@@ -27,6 +27,7 @@ post '/arts' => sub {
     my $filename   = request->upload('upload')->filename;
     my $tempname   = request->upload('upload')->tempname;
     my $email      = request->param('email');
+    my $jobname    = request->param('jobname');
 
     my ($origfilename, $origdirs, $origsuffix) = fileparse($filename, qr/\.[.]+$/);
 
@@ -56,7 +57,7 @@ post '/arts' => sub {
     print FH to_json($metadata);
     close(FH) || die "Unable to close '$jobmetafile': $!\n";
 
-    template upload => { jobfilename => $jobfile, filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS", checksum => $checksum };
+    template upload => { jobname => $jobname, jobfilename => $jobfile, filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS", checksum => $checksum };
 };
 
 sub generate_md5
