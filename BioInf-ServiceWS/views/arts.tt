@@ -167,6 +167,12 @@
     </div>
 
     <div class="artsinputrow">
+      <div class="artsinputlabel"><label>You might name your job here:</label></div>
+      <div class="artsinputreq"></div>
+      <div class="artsinputfield"><input type="text" name="jobname"/></div>
+    </div>
+
+    <div class="artsinputrow">
       <div class="artsinputlabel"></div>
       <div class="artsinputreq"></div>
       <div class="artsinputfield"><input type="submit" value="submit"></div>
