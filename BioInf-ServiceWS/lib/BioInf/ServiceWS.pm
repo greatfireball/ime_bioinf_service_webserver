@@ -68,7 +68,7 @@ post '/bgc' => sub {
     print FH to_json($metadata);
     close(FH) || die "Unable to close '$jobmetafile': $!\n";
 
-    template upload => { jobname => $jobname, jobfilename => $jobfile, filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS", checksum => $checksum };
+    template upload => { jobname => $jobname, jobfilename => $jobfile, filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "BGC", checksum => $checksum };
 };
 
 sub generate_md5
