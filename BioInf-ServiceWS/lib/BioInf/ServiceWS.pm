@@ -2,6 +2,7 @@ package BioInf::ServiceWS;
 use Dancer2;
 use Digest::SHA qw(hmac_sha256_hex);
 use Digest::MD5;
+use File::Basename;
 
 our $VERSION = '0.1';
 
@@ -27,6 +28,8 @@ post '/arts' => sub {
     my $tempname   = request->upload('upload')->tempname;
     my $email      = request->param('email');
 
+    my ($origfilename, $origdirs, $origsuffix) = fileparse($filename, qr/\.[.]+$/);
+
     # calculate a checksum for the uploaded file
     my $checksum = generate_md5($tempname);
 
@@ -37,7 +40,8 @@ post '/arts' => sub {
     # store file
     my $jobfolder   = "/upload/$jobid";
     mkdir $jobfolder || die "Unable to create $jobfolder: $!\n";
-    my $jobfile     = $jobfolder."/content.bin";
+    my $jobfile     = "content".$origsuffix;
+    my $jobfile_complete = $jobfolder."/".$jobfile;
     my $jobmetafile = $jobfolder."/metadata.json";
 
     my $metadata = {
@@ -47,12 +51,12 @@ post '/arts' => sub {
 	checksum  => $checksum,
 	timestamp => $timestamp,
     };
-    request->upload('upload')->copy_to($jobfile);
+    request->upload('upload')->copy_to($jobfile_complete);
     open(FH, ">", $jobmetafile) || die "Unable to open '$jobmetafile': $!\n";
     print FH to_json($metadata);
     close(FH) || die "Unable to close '$jobmetafile': $!\n";
 
-    template upload => { filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS", checksum => $checksum };
+    template upload => { jobfilename => $jobfile, filename => $filename, size => $size, email => $email, jobid => $jobid, analysisname => "ARTS", checksum => $checksum };
 };
 
 sub generate_md5
