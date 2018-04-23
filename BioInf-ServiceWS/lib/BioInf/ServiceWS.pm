@@ -33,7 +33,7 @@ post '/bgc' => sub {
     my $email      = request->param('email');
     my $jobname    = request->param('jobname');
 
-    my ($origfilename, $origdirs, $origsuffix) = fileparse($filename, qr/\.[.]+$/);
+    my ($origfilename, $origdirs, $origsuffix) = fileparse($filename, qr/\.[^.]+$/);
 
     # calculate a checksum for the uploaded file
     my $checksum = generate_md5($tempname);
