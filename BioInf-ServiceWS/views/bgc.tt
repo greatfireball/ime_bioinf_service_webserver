@@ -1,0 +1,33 @@
+<div id="page">
+  <h1>BGC analysis</h1>
+
+  <p>
+    For the BGC analysis you need to specify your input file. If you provide an email address you will be informed via email, when your job was processed.
+  </p>
+  <form name="bgcinput" method="post" enctype="multipart/form-data">
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please specify your email address:</label></div>
+      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputfield"><input type="email" name="email"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please upload your file here:</label></div>
+      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputfield"><input type="file" name="upload"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>You might name your job here:</label></div>
+      <div class="bgcinputreq"></div>
+      <div class="bgcinputfield"><input type="text" name="jobname"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"></div>
+      <div class="bgcinputreq"></div>
+      <div class="bgcinputfield"><input type="submit" value="submit"></div>
+    </div>
+    </p>
+  </form>
+</div>

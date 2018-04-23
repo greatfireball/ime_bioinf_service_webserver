@@ -10,11 +10,15 @@ get '/' => sub {
     template 'index' => { 'title' => 'BioInf::ServiceWS' };
 };
 
-get '/arts' => sub {
-    template 'arts';
+get '/bgc' => sub {
+    template 'bgc';
 };
 
-post '/arts' => sub {
+get '/arts' => sub {
+    forward '/bgc';
+};
+
+post '/bgc' => sub {
 
     my $all_uploads = request->uploads;
 

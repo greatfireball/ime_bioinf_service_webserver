@@ -188,20 +188,20 @@ font-family: sans-serif;
 font-size: 10px;
 }
 
-div.artsinputrow{
+div.bgcinputrow{
   clear: both;
   padding-top: 10px;
   text-align: center;
 }
 
-div.artsinputrow div.artsinputlabel {
+div.bgcinputrow div.bgcinputlabel {
   float: left;
   width: 35%;
   text-align: right;
   padding-right: 10px;
 }
 
-div.artsinputrow div.artsinputreq {
+div.bgcinputrow div.bgcinputreq {
   float: left;
   width: 5%;
   text-align: center;
@@ -209,7 +209,7 @@ div.artsinputrow div.artsinputreq {
   padding: 0px;
 }
 
-div.artsinputrow div.artsinputfield {
+div.bgcinputrow div.bgcinputfield {
   float: right;
   width: 55%;
   text-align: left;
