@@ -187,3 +187,30 @@ padding-right: 160px;
 font-family: sans-serif;
 font-size: 10px;
 }
+
+div.artsinputrow{
+  clear: both;
+  padding-top: 10px;
+  text-align: center;
+}
+
+div.artsinputrow div.artsinputlabel {
+  float: left;
+  width: 35%;
+  text-align: right;
+  padding-right: 10px;
+}
+
+div.artsinputrow div.artsinputreq {
+  float: left;
+  width: 5%;
+  text-align: center;
+  color: #C00000;
+  padding: 0px;
+}
+
+div.artsinputrow div.artsinputfield {
+  float: right;
+  width: 55%;
+  text-align: left;
+  }

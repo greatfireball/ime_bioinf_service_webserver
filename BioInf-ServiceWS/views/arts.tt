@@ -154,10 +154,23 @@
     For an ARTS analysis you need to specify your input file. If you provide an email address you will be informed via email, when your job was processed.
   </p>
   <form name="artsinput" action="arts" method="post" enctype="multipart/form-data">
-    <p>
-      <label>Please specify your email address: <input type="email" name="email"/></label><br />
-      <label>Please upload your file here: <input type="file" name="upload"/></label><br />
-      <input type="submit" value="submit"><br />
+    <div class="artsinputrow">
+      <div class="artsinputlabel"><label>Please specify your email address:</label></div>
+      <div class="artsinputreq">req.</div>
+      <div class="artsinputfield"><input type="email" name="email"/></div>
+    </div>
+
+    <div class="artsinputrow">
+      <div class="artsinputlabel"><label>Please upload your file here:</label></div>
+      <div class="artsinputreq">req.</div>
+      <div class="artsinputfield"><input type="file" name="upload"/></div>
+    </div>
+
+    <div class="artsinputrow">
+      <div class="artsinputlabel"></div>
+      <div class="artsinputreq"></div>
+      <div class="artsinputfield"><input type="submit" value="submit"></div>
+    </div>
     </p>
   </form>
 </div>
