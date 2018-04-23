@@ -46,11 +46,18 @@ post '/arts' => sub {
     my $jobmetafile = $jobfolder."/metadata.json";
 
     my $metadata = {
-	email     => $email,
-	filename  => $filename,
-	size      => $sizeinbyte,
-	checksum  => $checksum,
-	timestamp => $timestamp,
+	jobname     => $jobname,
+	email       => $email,
+	filename    => $filename,
+	size        => $sizeinbyte,
+	checksum    => $checksum,
+	timestamp   => $timestamp,
+	jobfilename => $jobfile,
+	version     => $VERSION,
+	prog2run    => [
+	    "antismash" => \1,
+	    "arts"      => \1,
+	    ],
     };
     request->upload('upload')->copy_to($jobfile_complete);
     open(FH, ">", $jobmetafile) || die "Unable to open '$jobmetafile': $!\n";
