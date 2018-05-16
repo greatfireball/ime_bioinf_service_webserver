@@ -45,14 +45,20 @@ get '/arts/:id/**' => sub {
     }
     elsif ($tags->[0] eq "trees")
     {
-	my $content = serve_arts_file('/run/'.$id.'/arts/results/trees/'.$tags->[1].".tree");
+	my $file='/run/'.$id.'/arts/results/trees/'.$tags->[1].".tree";
 
-	if ($content)
-	{
-	    return $content;
-	} else {
-	    status 404;
+	use Bio::TreeIO;
+
+	my $in = new Bio::TreeIO(-file => $file,
+				 -format => 'newick');
+	my $output = "";
+	open(my $fh, ">", \$output) || die;
+	while( my $tree = $in->next_tree ) {
+	    $out->write_tree($tree);
 	}
+	close($fh) || die;
+
+	send_as SVG => $output, {content_type => 'text/svg'};
     }
     elsif ($tags->[0] =~ /log/)
     {
