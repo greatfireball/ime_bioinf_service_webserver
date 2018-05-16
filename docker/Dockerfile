@@ -15,4 +15,5 @@ RUN apt update && apt install --yes \
 
 RUN cpanm \
 	Dancer2 \
-        Dancer2::Plugin::DBIC
+        Dancer2::Plugin::DBIC \
+	Bio::TreeIO
