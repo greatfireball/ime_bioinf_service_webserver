@@ -43,6 +43,15 @@ get '/arts/:id/**' => sub {
 	    send_file($file, system_path => 1);
 	}
     }
+    elsif ($tags->[0] eq "tables")
+    {
+	my $file='/run/'.$id.'/arts/results/tables/'.$tags->[1];
+
+	if (-e $file)
+	{
+	    send_file($file, system_path => 1);
+	}
+    }
     elsif ($tags->[0] eq "trees")
     {
 	my $file='/run/'.$id.'/arts/results/trees/'.$tags->[1].".tree";
