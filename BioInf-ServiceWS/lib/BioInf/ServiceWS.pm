@@ -53,6 +53,9 @@ get '/arts/:id/**' => sub {
 				 -format => 'newick');
 	my $output = "";
 	open(my $fh, ">", \$output) || die;
+	my $out = new Bio::TreeIO(-fh => $fh,
+				  -format => 'svggraph');
+	
 	while( my $tree = $in->next_tree ) {
 	    $out->write_tree($tree);
 	}
