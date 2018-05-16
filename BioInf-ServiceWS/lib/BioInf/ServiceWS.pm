@@ -43,6 +43,24 @@ get '/arts/:id/**' => sub {
 	    send_file($file, system_path => 1);
 	}
     }
+    elsif ($tags->[0] eq "export")
+    {
+	my $file='/run/'.$id.'/arts/results/'.$tags->[1];
+
+	if (-e $file)
+	{
+	    send_file($file, system_path => 1);
+	}
+    }
+    elsif ($tags->[0] eq "xlfile")
+    {
+	my $file='/run/'.$id.'/arts/results/'.$tags->[0];
+
+	if (-e $file)
+	{
+	    send_file($file, system_path => 1);
+	}
+    }
     elsif ($tags->[0] eq "tables")
     {
 	my $file='/run/'.$id.'/arts/results/tables/'.$tags->[1];
