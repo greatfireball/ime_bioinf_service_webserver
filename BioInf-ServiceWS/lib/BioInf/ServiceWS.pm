@@ -18,6 +18,122 @@ get '/arts' => sub {
     forward '/bgc';
 };
 
+get '/arts/:id/**' => sub {
+
+    my $id   = route_parameters->get('id');
+    my ($tags) = splat;
+
+    if ($tags->[0] eq "static")
+    {
+	my $filename = join("/", @{$tags});
+	send_file 'arts/'.$filename;
+
+    }
+    elsif ($tags->[0] eq "results")
+    {
+	return template 'arts',{ jobid => $id }, { layout => undef };
+    }
+    elsif ($tags->[0] eq "antismash")
+    {
+	my @filelocation = @{$tags};
+	shift @filelocation;
+	my $file = '/run/'.$id.'/antismash/content/'.join('/', @filelocation);
+	if (-e $file)
+	{
+	    send_file($file, system_path => 1);
+	}
+    }
+    elsif ($tags->[0] eq "trees")
+    {
+	my $content = serve_arts_file('/run/'.$id.'/arts/results/trees/'.$tags->[1].".tree");
+
+	if ($content)
+	{
+	    return $content;
+	} else {
+	    status 404;
+	}
+    }
+    elsif ($tags->[0] =~ /log/)
+    {
+	my $file = '/run/'.$id.'/arts/results/arts-query.log';
+
+	if (-e $file)
+	{
+	    send_file($file, system_path => 1, content_type => 'text/plain');
+	} else {
+	    status 404;
+	}
+    }
+    elsif ($tags->[0] =~ /krtab/)
+    {
+	my $content = serve_arts_file('/run/'.$id.'/arts/results/tables/knownhits.json');
+
+	if ($content)
+	{
+	    return $content;
+	} else {
+	    status 404;
+	}
+    }
+    elsif ($tags->[0] =~ /dupmatrix/)
+    {
+	my $content = serve_arts_file('/run/'.$id.'/arts/results/tables/duptable.json');
+
+	if ($content)
+	{
+	    return $content;
+	} else {
+	    status 404;
+	}
+    }
+    elsif ($tags->[0] =~ /bgctable/)
+    {
+	my $content = serve_arts_file('/run/'.$id.'/arts/results/tables/bgctable.json');
+
+	if ($content)
+	{
+	    return $content;
+	} else {
+	    status 404;
+	}
+    }
+    elsif ($tags->[0] =~ /summarytab/)
+    {
+	my $content = serve_arts_file('/run/'.$id.'/arts/results/tables/coretable.json');
+
+	if ($content)
+	{
+	    return $content;
+	} else {
+	    status 404;
+	}
+    }
+    elsif ($tags->[0] eq "status")
+    {
+	return to_json({state => "Done"});
+    }
+    else
+    {
+	status 404;
+    }
+};
+
+sub serve_arts_file
+{
+    my ($file2serve) = @_;
+
+    if (-e $file2serve)
+    {
+	open(FH, "<", $file2serve)||die;
+	my @dat = <FH>;
+	close(FH) || die;
+	return join("", @dat);
+    } else {
+	return;
+    }
+}
+
 post '/bgc' => sub {
 
     my $all_uploads = request->uploads;
