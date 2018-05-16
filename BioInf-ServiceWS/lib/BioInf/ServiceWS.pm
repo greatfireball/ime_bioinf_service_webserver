@@ -47,21 +47,33 @@ get '/arts/:id/**' => sub {
     {
 	my $file='/run/'.$id.'/arts/results/trees/'.$tags->[1].".tree";
 
-	use Bio::TreeIO;
-
-	my $in = new Bio::TreeIO(-file => $file,
-				 -format => 'newick');
-	my $output = "";
-	open(my $fh, ">", \$output) || die;
-	my $out = new Bio::TreeIO(-fh => $fh,
-				  -format => 'svggraph');
-	
-	while( my $tree = $in->next_tree ) {
-	    $out->write_tree($tree);
+	if ($tags->[1] eq "speciesmlst")
+	{
+	    $file='/run/'.$id.'/arts/results/trees/SpeciesMLST.tree';
 	}
-	close($fh) || die;
+	if (-e $file)
+	{
+	    use Bio::TreeIO;
+	    
+	    my $in = new Bio::TreeIO(-file => $file,
+				     -format => 'newick');
+	    my $output = "";
+	    open(my $fh, ">", \$output) || die;
+	    my $out = new Bio::TreeIO(-fh => $fh,
+				      -format => 'svggraph',
+				      -width  => 2400,
+				      -margin => 200,
+		);
+	    
+	    while( my $tree = $in->next_tree ) {
+		$out->write_tree($tree);
+	    }
+	    close($fh) || die;
+	    
+	    content_type 'svg';
 
-	send_as SVG => $output, {content_type => 'text/svg'};
+	    return $output;
+	}
     }
     elsif ($tags->[0] =~ /log/)
     {
