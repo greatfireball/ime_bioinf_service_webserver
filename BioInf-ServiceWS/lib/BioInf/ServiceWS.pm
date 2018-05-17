@@ -18,6 +18,10 @@ get '/arts' => sub {
     forward '/bgc';
 };
 
+get '/antismash' => sub {
+    forward '/bgc';
+};
+
 get '/arts/:id/**' => sub {
 
     my $id   = route_parameters->get('id');
