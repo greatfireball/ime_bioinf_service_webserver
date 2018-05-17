@@ -150,6 +150,18 @@ get '/arts/:id/**' => sub {
 	    status 404;
 	}
     }
+    elsif ($tags->[0] =~ /funcstats/)
+    {
+	my $content = serve_arts_file('/run/'.$id.'/arts/results/tables/coretable.json');
+
+	if ($content)
+	{
+	    my $dat = from_json($content);
+	    return to_json($dat->{funcstats});
+	} else {
+	    status 404;
+	}
+    }
     elsif ($tags->[0] =~ /summarytab/)
     {
 	my $content = serve_arts_file('/run/'.$id.'/arts/results/tables/coretable.json');
