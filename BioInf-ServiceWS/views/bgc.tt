@@ -4,7 +4,7 @@
   <p>
     For the BGC analysis you need to specify your input file. If you provide an email address you will be informed via email, when your job was processed.
   </p>
-  <form name="bgcinput" method="post" enctype="multipart/form-data">
+  <form name="bgcinput" action="/bgc" method="post" enctype="multipart/form-data">
     <div class="bgcinputrow">
       <div class="bgcinputlabel"><label>Please specify your email address:</label></div>
       <div class="bgcinputreq">req.</div>
