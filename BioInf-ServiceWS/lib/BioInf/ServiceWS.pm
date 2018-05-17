@@ -85,7 +85,7 @@ get '/arts/:id/**' => sub {
 	if (-e $file)
 	{
 	    use Bio::TreeIO;
-	    
+
 	    my $in = new Bio::TreeIO(-file => $file,
 				     -format => 'newick');
 	    my $output = "";
@@ -95,12 +95,12 @@ get '/arts/:id/**' => sub {
 				      -width  => 2400,
 				      -margin => 200,
 		);
-	    
+
 	    while( my $tree = $in->next_tree ) {
 		$out->write_tree($tree);
 	    }
 	    close($fh) || die;
-	    
+
 	    content_type 'svg';
 
 	    return $output;
@@ -163,7 +163,70 @@ get '/arts/:id/**' => sub {
     }
     elsif ($tags->[0] eq "status")
     {
-	return to_json({state => "Done"});
+	my $file = '/run/'.$id.'/arts/results/arts-query.log';
+
+	my $status = {
+	    "id"         => $id,
+	    "state"      => "",
+	    "start"      => "",
+	    "end"        => "",
+	    "orgname"    => $id,
+	    "jobtitle"   => $id,
+	    "step"       => "",
+	    "tsteps"     => 5,
+	    "buildtree"  => 0,
+	    "coretotal"  => "N/A",
+	    "cdscount"   => "N/A",
+	    "bgccount"   => "N/A",
+	    "dupcount"   => "N/A",
+	    "phylcount"  => "N/A",
+	    "proxcount"  => "N/A",
+	    "twocount"   => "N/A",
+	    "threecount" => "N/A",
+	    "krhits"     => "N/A",
+	};
+
+	if (-e $file)
+	{
+	    my ($error, $warning, $buildtree) = (0, 0, 0);
+	    open(FH, "<", $file) || die "Unable to open file $file: $!\n";
+	    while(<FH>)
+	    {
+		chomp;
+
+		$error++ if (/ERROR/);
+		$warning++ if (/WARNING/);
+
+		$status->{state}       = "Done" if (/SUCCESS!/);
+		$status->{orgname}     = $1     if (/query: org=(.+)/);
+		$status->{dupcount}    = $1     if (/(\d+) duplicate genes/);
+		$status->{proxcount}   = $1     if (/Proximity hits found: (\d+)/);
+		$status->{twocount}    = $1     if (/Hits with two or more criteria: (\d+)/);
+		$status->{threecount}  = $1     if (/Hits with three or more criteria: (\d+)/);
+		$status->{krhits}      = $1     if (/Known Resistance Hits: (\d+)/);
+		$status->{phylcount}   = $1     if (/Phylogeny hits found: (\d+)/);
+
+		$status->{coretotal}   = $1     if (/Wrote \(1 of (\d+)/);
+
+		($status->{cdscount}, $status->{bgccount}) = ($1, $2) if (/CDS features: (\d+); Clusters: (\d+)/);
+
+		$buildtree++ if(/BuildTree: Finished/);
+	    }
+	    close(FH) || die "Unable to close file $file: $!\n";
+	    if ($status->{state} eq "Done")
+	    {
+		$status->{ptitle} = "100% Complete";
+		$status->{pwidth} = 100;
+	    }
+	    if ($error || $warning)
+	    {
+		$status->{ptitle} = sprintf("%s with %s errors and %s warnings", $status->{ptitle}, $error, $warning);
+	    }
+
+	    $status->{buildtree} = int($buildtree/$status->{coretotal});
+	}
+
+	return to_json($status);
     }
     else
     {
