@@ -308,12 +308,12 @@ td.details-control:hover {
     background-size: 15px 15px;
 }
 td.details-control {
-    background: url('static/images/expcolbtn1.png') no-repeat center center;
+    background: url('../../static/images/expcolbtn1.png') no-repeat center center;
     background-size: 10px 10px;
     cursor: pointer;
 }
 tr.shown td.details-control {
-    background: url('static/images/expcolbtn2.png') no-repeat center center;
+    background: url('../../static/images/expcolbtn2.png') no-repeat center center;
     background-size: 10px 10px;
 }
 
