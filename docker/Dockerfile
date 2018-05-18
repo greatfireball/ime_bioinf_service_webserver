@@ -11,6 +11,7 @@ RUN apt update && apt install --yes \
 	libdbix* \
 	libposix-strftime-compiler-perl \
 	libapache-logformat-compiler-perl \
+	pbzip2 \
 	mysql-client
 
 RUN cpanm \
