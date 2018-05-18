@@ -12,6 +12,7 @@ RUN apt update && apt install --yes \
 	libposix-strftime-compiler-perl \
 	libapache-logformat-compiler-perl \
 	pbzip2 \
+	pngquant \
 	mysql-client
 
 RUN cpanm \
