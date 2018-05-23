@@ -40,7 +40,12 @@ get '/openproject_categories' => sub {
 	    my $cat_link = $cat->{_links}{self}{href};
 	    my $cat_title = $cat->{_links}{self}{title};
 
-	    push(@{$data->{$name}}, { link => $cat_link, title => $cat_title });
+	    if ($data->{$name})
+	    {
+		$data->{$name} .= ','.$cat_title;
+	    } else {
+		$data->{$name} .= $cat_title;
+	    }
 	}
     }
 
