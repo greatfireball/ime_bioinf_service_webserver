@@ -5,11 +5,20 @@
     For the BGC analysis you need to specify your input file. If you provide an email address you will be informed via email, when your job was processed.
   </p>
   <form name="bgcinput" action="/bgc" method="post" enctype="multipart/form-data">
-  <p><select id="projectselection"></select></p>
-  <p><select id="categoryselection"></select></p>
+  <p><select id="projectselection"><option>Select a project</option></select></p>
+  <p><select id="categoryselection"><option>Select a project above</option></select></p>
   </form>
 
   <script>
+    $(function() {
+      var $dropdown = $("#projectselection");
+      $.getJSON("api/openproject_categories", function(data) {
+	$.each(data, function(key, value) {
+         $dropdown.append("<option>"+key+"</option>");
+        });
+      });
+    });
+
     $("#projectselection").change(function() {
 
 	var $dropdown = $(this);
@@ -17,19 +26,12 @@
 	$.getJSON("api/openproject_categories", function(data) {
 	
 		var key = $dropdown.val();
-		var vals = [];
+		var vals = ["Select a project above"];
+                if (data.hasOwnProperty(key))
+		{
+		   vals = data[key].split(",");
+                }
 							
-		switch(key) {
-			case 'beverages':
-				vals = data.beverages.split(",");
-				break;
-			case 'snacks':
-				vals = data.snacks.split(",");
-				break;
-			case 'base':
-				vals = ['Please choose from above'];
-		}
-		
 		var $secondChoice = $("#categoryselection");
 		$secondChoice.empty();
 		$.each(vals, function(index, value) {

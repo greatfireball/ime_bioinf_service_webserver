@@ -34,6 +34,8 @@ get '/openproject_categories' => sub {
 
 	my $categories = decode_json($response->decoded_content());
 
+	$data->{$name} = "";
+
 	foreach my $cat (@{$categories->{_embedded}{elements}})
 	{
 	    next unless ($cat->{_type} eq "Category");
