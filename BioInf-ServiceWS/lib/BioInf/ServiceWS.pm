@@ -11,9 +11,44 @@ get '/create_wp' => sub {
 };
 
 post '/create_wp' => sub {
-    use Data::Dumper;
-    print Dumper({request->params});
+    my $dat = request->params;
+
+    my $package_tree_name = sprintf("[%s] %s", $dat->{category}, $dat->{wpname});
+    my $username = $dat->{assignee};
+    $username =~ s/\([^)]+\)$//;
+
+    my $apikey = "";
+    my $uri    = "";
+
+    # get the project
+    my $project = find_project($uri, $apikey, $dat->{project});
+    use Data::Dumper; print Dumper($project);
 };
+
+sub find_project
+{
+    my ($url, $apikey, $projectid) = @_;
+    my $ua = LWP::UserAgent->new();
+
+    my $request = GET $url.'/api/v3/projects';
+
+    $request->authorization_basic('apikey', $apikey);
+
+    my $response = $ua->request($request);
+
+    my $dat = decode_json($response->decoded_content());
+
+    # filter for a project with the projectid
+    my @allprojects = @{$dat->{'_embedded'}{elements}};
+    my @projects = grep { $_->{identifier} eq $projectid } (@allprojects);
+
+    if (@projects != 1)
+    {
+	die
+    };
+
+    return $projects[0];
+}
 
 get '/' => sub {
     template 'index' => { 'title' => 'BioInf::ServiceWS' };
