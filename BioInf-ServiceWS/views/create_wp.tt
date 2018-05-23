@@ -1,0 +1,42 @@
+<div id="page">
+  <h1>BGC analysis</h1>
+
+  <p>
+    For the BGC analysis you need to specify your input file. If you provide an email address you will be informed via email, when your job was processed.
+  </p>
+  <form name="bgcinput" action="/bgc" method="post" enctype="multipart/form-data">
+  <p><select id="projectselection"></select></p>
+  <p><select id="categoryselection"></select></p>
+  </form>
+
+  <script>
+    $("#projectselection").change(function() {
+
+	var $dropdown = $(this);
+
+	$.getJSON("api/openproject_categories", function(data) {
+	
+		var key = $dropdown.val();
+		var vals = [];
+							
+		switch(key) {
+			case 'beverages':
+				vals = data.beverages.split(",");
+				break;
+			case 'snacks':
+				vals = data.snacks.split(",");
+				break;
+			case 'base':
+				vals = ['Please choose from above'];
+		}
+		
+		var $secondChoice = $("#categoryselection");
+		$secondChoice.empty();
+		$.each(vals, function(index, value) {
+			$secondChoice.append("<option>" + value + "</option>");
+		});
+
+	});
+});
+  </script>
+</div>

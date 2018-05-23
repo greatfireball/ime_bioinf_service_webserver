@@ -6,6 +6,10 @@ use File::Basename;
 
 our $VERSION = '0.1';
 
+get '/create_wp' => sub {
+    template 'create_wp';
+};
+
 get '/' => sub {
     template 'index' => { 'title' => 'BioInf::ServiceWS' };
 };
