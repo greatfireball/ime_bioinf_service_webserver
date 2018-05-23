@@ -7,6 +7,6 @@ get '/openproject_categories' => sub {
     my $data = {};
 
     return $data;
-}
+};
 
 1;
