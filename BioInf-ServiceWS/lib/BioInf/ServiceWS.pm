@@ -36,6 +36,12 @@ post '/create_wp' => sub {
 
     my $now = DateTime->now( time_zone => DateTime::TimeZone->new(name=> 'local'));
     $now->set_time_zone('UTC');
+    my $date = $now->ymd('-').'T'.$now->hms(':').'Z';
+
+    my $u = URI->new($uri);
+    my $base_uri=$u->scheme."://".$u->host_port;
+
+    add_subtree($base_uri, $project, $package_tree_name, $apikey, {assignee => { href => $user }, category => { href => $category }, startDate => $date });
 
     use Data::Dumper;
     print Dumper({ username => $username,
@@ -44,10 +50,120 @@ post '/create_wp' => sub {
 		   category => $category,
 		   package_tree_name => $package_tree_name,
 		   dat => $dat,
-		   now => $now->ymd('-').'T'.$now->hms(':')
+		   now => $date
 		 });
 
 };
+
+sub create_wp_4_project
+{
+    my ($url, $project, $subject, $apikey, $settings) = @_;
+
+    my %setting = %{$settings};
+    $setting{subject} = $subject;
+
+    my $ua = LWP::UserAgent->new();
+
+    my $request = POST $base_uri.$project->{_links}{createWorkPackageImmediate}{href};
+
+    $request->authorization_basic('apikey', $apikey);
+
+    $request->header("Content-Type" => "application/json");
+    $request->content(to_json(\%setting));
+    $request->header("Content-Length" => length($request->content));
+
+    my $response = $ua->request($request);
+
+    my $dat = decode_json($response->decoded_content());
+
+    return $dat;
+}
+
+sub get_wp_from_uri
+{
+    my ($uri, $apikey) = @_;
+
+    my $ua = LWP::UserAgent->new();
+
+    my $request = GET $uri;
+    $request->authorization_basic('apikey', $apikey);
+
+    my $response = $ua->request($request);
+
+    my $dat = decode_json($response->decoded_content());
+
+    return $dat;
+}
+
+sub add_subtree
+{
+    my ($base_uri, $project, $top_name, $apikey, $settings) = @_;
+
+    my $top_wp = create_wp_4_project($base_uri, $project, $top_name, $apikey, $settings);
+    my $top_uri = $base_uri.$top_wp->{_links}{self}{href};
+
+    my $wp = get_wp_from_uri($top_uri, $apikey);
+
+    create_child_wp($top_uri, $apikey, "Upload", $settings);
+    create_child_wp($top_uri, $apikey, "Cleaning", $settings);
+    create_child_wp($top_uri, $apikey, "Correction", $settings);
+    create_child_wp($top_uri, $apikey, "Genome size estimation", $settings);
+
+    my $assembly_uri = create_child_wp($top_uri, $apikey, "Assembly", $settings);
+    create_child_wp($assembly_uri, $apikey, "Masurca", $settings);
+    create_child_wp($assembly_uri, $apikey, "Spades", $settings);
+    create_child_wp($assembly_uri, $apikey, "Unicycler", $settings);
+
+    my $annotation_uri = create_child_wp($top_uri, $apikey, "Annotation", $settings);
+    create_child_wp($annotation_uri, $apikey, "GenDB", $settings);
+    create_child_wp($annotation_uri, $apikey, "Arts+Antismash", $settings);
+
+    return $top_wp;
+}
+
+sub create_child_wp
+{
+    my ($parent_uri, $apikey, $new_name, $settings) = @_;
+
+    my $new = create_wp_4_project($base_uri, $project, $new_name, $apikey, $settings);
+    my $new_uri = $base_uri.$new->{_links}{self}{href};
+
+    add_parent($new_uri, $apikey, $parent_uri);
+
+    return $new_uri;
+
+}
+
+sub add_parent
+{
+    my ($uri, $apikey, $parent_uri) = @_;
+
+    my $u = URI->new($url);
+    my $base_uri=$u->scheme."://".$u->host_port;
+
+    my $wp = get_wp_from_uri($uri, $apikey);
+
+    my $request = HTTP::Request->new(PATCH => $base_uri.$wp->{_links}{changeParent}{href});
+    $request->header("Content_Type" => 'application/json');
+    $request->authorization_basic('apikey', $apikey);
+    my $data = {
+	"lockVersion" => $wp->{lockVersion},
+	"_links" => {
+	    "parent" => {
+		"href" => $parent_uri
+	    },
+	},
+    };
+    $request->content(to_json($data));
+    $request->header("Content-Length" => length($request->content));
+
+    my $ua = LWP::UserAgent->new();
+    my $response = $ua->request($request);
+
+    my $dat = decode_json($response->decoded_content());
+
+    return $dat;
+}
 
 sub find_category
 {
