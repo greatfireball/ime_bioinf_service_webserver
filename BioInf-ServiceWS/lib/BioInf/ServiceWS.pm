@@ -34,10 +34,34 @@ post '/create_wp' => sub {
     my $project = find_project($uri, $apikey, $dat->{project});
     use Data::Dumper; print Dumper($project);
 
+    # get the category
+    my $category = find_category($uri, $apikey, $dat->{category}, $project);
+
     # get the user
     my $user = find_user($uri, $apikey, $username);
     use Data::Dumper; print Dumper($user);
 };
+
+sub find_category
+{
+    my ($url, $apikey, $category, $project) = @_;
+    my $ua = LWP::UserAgent->new();
+
+    my $u = URI->new($url);
+    my $base_uri=$u->scheme."://".$u->host_port;
+    my $request = GET $base_uri.$project->{_links}{categories}{href};
+
+    $request->authorization_basic('apikey', $apikey);
+
+    my $response = $ua->request($request);
+
+    my $dat = decode_json($response->decoded_content());
+
+    print Dumper($dat);
+    my $category_href;
+
+    return $category_href;
+}
 
 sub find_project
 {
