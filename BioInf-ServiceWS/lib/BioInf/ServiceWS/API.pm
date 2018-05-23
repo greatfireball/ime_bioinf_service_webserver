@@ -37,8 +37,8 @@ get '/openproject_categories' => sub {
 	foreach my $cat (@{$categories->{_embedded}{elements}})
 	{
 	    next unless ($cat->{_type} eq "Category");
-	    my $cat_link = $cat->{_links}{self}{href}
-	    my $cat_title = $cat->{_links}{self}{title}
+	    my $cat_link = $cat->{_links}{self}{href};
+	    my $cat_title = $cat->{_links}{self}{title};
 
 	    push(@{$data->{$name}}, { link => $cat_link, title => $cat_title });
 	}
