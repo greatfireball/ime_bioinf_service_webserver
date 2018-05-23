@@ -36,7 +36,7 @@ post '/create_wp' => sub {
 
     my $now = DateTime->now( time_zone => DateTime::TimeZone->new(name=> 'local'));
     $now->set_time_zone('UTC');
-    my $date = $now->ymd('-').'T'.$now->hms(':').'Z';
+    my $date = $now->ymd('-');
 
     my $u = URI->new($uri);
     my $base_uri=$u->scheme."://".$u->host_port;
@@ -90,10 +90,8 @@ sub get_wp_from_uri
 sub add_subtree
 {
     my ($base_uri, $project, $top_name, $apikey, $settings) = @_;
-    use Data::Dumper; print Dumper({INPUT => \@_});
 
     my $top_wp = create_wp_4_project($base_uri, $project, $top_name, $apikey, $settings);
-    print Dumper($top_wp);
     my $top_uri = $base_uri.$top_wp->{_links}{self}{href};
 
     my $wp = get_wp_from_uri($top_uri, $apikey);
