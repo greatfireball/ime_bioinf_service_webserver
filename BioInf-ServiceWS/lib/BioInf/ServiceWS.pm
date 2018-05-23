@@ -106,26 +106,26 @@ sub add_subtree
 
     my $wp = get_wp_from_uri($top_uri, $apikey);
 
-    create_child_wp($top_uri, $apikey, "Upload", $settings);
-    create_child_wp($top_uri, $apikey, "Cleaning", $settings);
-    create_child_wp($top_uri, $apikey, "Correction", $settings);
-    create_child_wp($top_uri, $apikey, "Genome size estimation", $settings);
+    create_child_wp($top_uri, $project, $apikey, "Upload", $settings);
+    create_child_wp($top_uri, $project, $apikey, "Cleaning", $settings);
+    create_child_wp($top_uri, $project, $apikey, "Correction", $settings);
+    create_child_wp($top_uri, $project, $apikey, "Genome size estimation", $settings);
 
-    my $assembly_uri = create_child_wp($top_uri, $apikey, "Assembly", $settings);
-    create_child_wp($assembly_uri, $apikey, "Masurca", $settings);
-    create_child_wp($assembly_uri, $apikey, "Spades", $settings);
-    create_child_wp($assembly_uri, $apikey, "Unicycler", $settings);
+    my $assembly_uri = create_child_wp($top_uri, $project, $apikey, "Assembly", $settings);
+    create_child_wp($assembly_uri, $project, $apikey, "Masurca", $settings);
+    create_child_wp($assembly_uri, $project, $apikey, "Spades", $settings);
+    create_child_wp($assembly_uri, $project, $apikey, "Unicycler", $settings);
 
-    my $annotation_uri = create_child_wp($top_uri, $apikey, "Annotation", $settings);
-    create_child_wp($annotation_uri, $apikey, "GenDB", $settings);
-    create_child_wp($annotation_uri, $apikey, "Arts+Antismash", $settings);
+    my $annotation_uri = create_child_wp($top_uri, $project, $apikey, "Annotation", $settings);
+    create_child_wp($annotation_uri, $project, $apikey, "GenDB", $settings);
+    create_child_wp($annotation_uri, $project, $apikey, "Arts+Antismash", $settings);
 
     return $top_wp;
 }
 
 sub create_child_wp
 {
-    my ($parent_uri, $apikey, $new_name, $settings) = @_;
+    my ($parent_uri, $project, $apikey, $new_name, $settings) = @_;
 
     my $u = URI->new($parent_uri);
     my $base_uri=$u->scheme."://".$u->host_port;
