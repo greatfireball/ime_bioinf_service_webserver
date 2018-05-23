@@ -6,14 +6,13 @@ use HTTP::Request::Common;
 
 set serializer => 'JSON';
 
+my $url    = '';
+my $apikey = '';
+my $u = URI->new($url);
+my $base_uri=$u->scheme."://".$u->host_port;
+
 get '/openproject_categories' => sub {
     my $data = {};
-
-    my $url    = '';
-    my $apikey = '';
-
-    my $u = URI->new($url);
-    my $base_uri=$u->scheme."://".$u->host_port;
 
     # create the request to optain all accessable projects
     my $ua = LWP::UserAgent->new();
@@ -49,6 +48,25 @@ get '/openproject_categories' => sub {
 		$data->{$name} .= $cat_title;
 	    }
 	}
+    }
+
+    return $data;
+};
+
+get '/openproject_users' => sub {
+    my $data = [];
+
+    # create the request to optain all users
+    foreach my $userid (1..100)
+    {
+	my $ua = LWP::UserAgent->new();
+	my $request = GET $url.'/api/v3/users/'.$userid;
+	$request->authorization_basic('apikey', $apikey);
+	my $response = $ua->request($request);
+	my $dat = decode_json($response->decoded_content());
+
+	next unless ($dat->{status} eq "active" || $dat->{status} eq "invited");
+	push(@{$data}, sprintf("%s (%s)", $dat->{name}, $dat->{status}));
     }
 
     return $data;
