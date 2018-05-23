@@ -81,7 +81,7 @@ sub find_user
 
 	my $dat = decode_json($response->decoded_content());
 
-	if ($dat->{name} eq $username)
+	if (exists $dat->{name} && $dat->{name} && $dat->{name} eq $username)
 	{
 	    $user = $dat->{_links}{self}{href};
 	    last;
