@@ -20,6 +20,13 @@ post '/create_wp' => sub {
     my $username = $dat->{assignee};
     $username =~ s/\([^)]+\)$//;
 
+    print Dumper(
+	{
+	    username => $username,
+	    package_tree_name => $package_tree_name,
+	    dat => $dat
+	});
+
     my $apikey = "";
     my $uri    = "";
 
