@@ -63,6 +63,8 @@ sub create_wp_4_project
     $setting{subject} = $subject;
 
     my $ua = LWP::UserAgent->new();
+    my $u = URI->new($url);
+    my $base_uri=$u->scheme."://".$u->host_port;
 
     my $request = POST $base_uri.$project->{_links}{createWorkPackageImmediate}{href};
 
@@ -125,6 +127,9 @@ sub create_child_wp
 {
     my ($parent_uri, $apikey, $new_name, $settings) = @_;
 
+    my $u = URI->new($parent_uri);
+    my $base_uri=$u->scheme."://".$u->host_port;
+
     my $new = create_wp_4_project($base_uri, $project, $new_name, $apikey, $settings);
     my $new_uri = $base_uri.$new->{_links}{self}{href};
 
@@ -138,7 +143,7 @@ sub add_parent
 {
     my ($uri, $apikey, $parent_uri) = @_;
 
-    my $u = URI->new($url);
+    my $u = URI->new($uri);
     my $base_uri=$u->scheme."://".$u->host_port;
 
     my $wp = get_wp_from_uri($uri, $apikey);
