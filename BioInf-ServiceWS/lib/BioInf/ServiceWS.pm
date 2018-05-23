@@ -4,6 +4,9 @@ use Digest::SHA qw(hmac_sha256_hex);
 use Digest::MD5;
 use File::Basename;
 
+use LWP::UserAgent;
+use HTTP::Request::Common;
+
 our $VERSION = '0.1';
 
 get '/create_wp' => sub {
