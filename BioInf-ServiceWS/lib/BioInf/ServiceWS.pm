@@ -43,23 +43,13 @@ post '/create_wp' => sub {
 
     add_subtree($base_uri, $project, $package_tree_name, $apikey, {assignee => { href => $user }, category => { href => $category }, startDate => $date });
 
-    use Data::Dumper;
-    print Dumper({ username => $username,
-		   user => $user,
-		   project => $project,
-		   category => $category,
-		   package_tree_name => $package_tree_name,
-		   dat => $dat,
-		   now => $date
-		 });
-
 };
 
 sub create_wp_4_project
 {
     my ($url, $project, $subject, $apikey, $settings) = @_;
 
-    my %setting = %{$settings};
+    my %setting = (%{$settings});
     $setting{subject} = $subject;
 
     my $ua = LWP::UserAgent->new();
@@ -100,8 +90,10 @@ sub get_wp_from_uri
 sub add_subtree
 {
     my ($base_uri, $project, $top_name, $apikey, $settings) = @_;
+    use Data::Dumper; print Dumper({INPUT => \@_});
 
     my $top_wp = create_wp_4_project($base_uri, $project, $top_name, $apikey, $settings);
+    print Dumper($top_wp);
     my $top_uri = $base_uri.$top_wp->{_links}{self}{href};
 
     my $wp = get_wp_from_uri($top_uri, $apikey);
