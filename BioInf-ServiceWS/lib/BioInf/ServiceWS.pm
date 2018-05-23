@@ -23,6 +23,10 @@ post '/create_wp' => sub {
     # get the project
     my $project = find_project($uri, $apikey, $dat->{project});
     use Data::Dumper; print Dumper($project);
+
+    # get the user
+    my $user = find_user($uri, $apikey, $dat->{assignee});
+    use Data::Dumper; print Dumper($user);
 };
 
 sub find_project
@@ -49,6 +53,34 @@ sub find_project
 
     return $projects[0];
 }
+
+sub find_user
+{
+    my ($url, $apikey, $username) = @_;
+    my $ua = LWP::UserAgent->new();
+
+    my $user = undef;
+
+    foreach my $uid (1..1000)
+    {
+	my $request = GET $url.'/api/v3/users/'.$uid;
+
+	$request->authorization_basic('apikey', $apikey);
+
+	my $response = $ua->request($request);
+
+	my $dat = decode_json($response->decoded_content());
+
+	if ($dat->{name} eq $username)
+	{
+	    $user = $dat->{_links}{self}{href};
+	    last;
+	}
+    }
+
+    return $user;
+}
+
 
 get '/' => sub {
     template 'index' => { 'title' => 'BioInf::ServiceWS' };
