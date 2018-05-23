@@ -7,6 +7,7 @@ use File::Basename;
 use LWP::UserAgent;
 use HTTP::Request::Common;
 use DateTime;
+use DateTime::TimeZone;
 
 our $VERSION = '0.1';
 
@@ -33,13 +34,17 @@ post '/create_wp' => sub {
     # get the user
     my $user = find_user($uri, $apikey, $username);
 
+    my $now = DateTime->now( time_zone => DateTime::TimeZone->new(name=> 'local'));
+    $now->set_time_zone('UTC');
+
     use Data::Dumper;
     print Dumper({ username => $username,
 		   user => $user,
 		   project => $project,
 		   category => $category,
 		   package_tree_name => $package_tree_name,
-		   dat => $dat
+		   dat => $dat,
+		   now => $now->ymd('-').'T'.$now->hms(':')
 		 });
 
 };
