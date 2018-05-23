@@ -47,7 +47,7 @@ sub find_project
 
     # filter for a project with the projectid
     my @allprojects = @{$dat->{'_embedded'}{elements}};
-    my @projects = grep { $_->{identifier} eq $projectid } (@allprojects);
+    my @projects = grep { exists $_->{identifier} && $_->{identifier} && $_->{identifier} eq $projectid } (@allprojects);
 
     if (@projects != 1)
     {
