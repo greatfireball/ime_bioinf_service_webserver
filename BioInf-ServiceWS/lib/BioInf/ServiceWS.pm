@@ -56,9 +56,16 @@ sub find_category
     my $response = $ua->request($request);
 
     my $dat = decode_json($response->decoded_content());
-
-    print Dumper($dat);
     my $category_href;
+
+    foreach my $current_cat (@{$dat->{_embedded}{elements}})
+    {
+	if (exists $current_cat->{name} && $current_cat->{name} && $current_cat->{name} eq $category)
+	{
+	    $category_href = $current_cat->{_links}{self}{href};
+	    last;
+	}
+    }
 
     return $category_href;
 }
