@@ -1,4 +1,4 @@
-packagen BioInf::ServiceWS::API;
+package BioInf::ServiceWS::API;
 use Dancer2;
 
 set serializer => 'JSON';
