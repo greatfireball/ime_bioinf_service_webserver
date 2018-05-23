@@ -18,7 +18,7 @@ post '/create_wp' => sub {
 
     my $package_tree_name = sprintf("[%s] %s", $dat->{category}, $dat->{wpname});
     my $username = $dat->{assignee};
-    $username =~ s/\([^)]+\)$//;
+    $username =~ s/\s+\([^)]+\)$//;
 
     print Dumper(
 	{
@@ -35,7 +35,7 @@ post '/create_wp' => sub {
     use Data::Dumper; print Dumper($project);
 
     # get the user
-    my $user = find_user($uri, $apikey, $dat->{assignee});
+    my $user = find_user($uri, $apikey, $username);
     use Data::Dumper; print Dumper($user);
 };
 
