@@ -19,10 +19,10 @@
          });
       });
 
-      var $dropdown = $("#assigneeselection");
+      var $assignee = $("#assigneeselection");
       $.getJSON("api/openproject_users", function(data) {
          $.each(data, function(index, value) {
-            $dropdown.append("<option>"+value+"</option>");
+            $assignee.append("<option>"+value+"</option>");
          });
       });
     });
