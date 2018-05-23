@@ -10,6 +10,11 @@ get '/create_wp' => sub {
     template 'create_wp';
 };
 
+post '/create_wp' => sub {
+    use Data::Dumper;
+    print Dumper({request->params});
+};
+
 get '/' => sub {
     template 'index' => { 'title' => 'BioInf::ServiceWS' };
 };
