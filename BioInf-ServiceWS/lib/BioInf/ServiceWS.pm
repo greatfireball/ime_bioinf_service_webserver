@@ -20,26 +20,27 @@ post '/create_wp' => sub {
     my $username = $dat->{assignee};
     $username =~ s/\s+\([^)]+\)$//;
 
-    print Dumper(
-	{
-	    username => $username,
-	    package_tree_name => $package_tree_name,
-	    dat => $dat
-	});
-
     my $apikey = "";
     my $uri    = "";
 
     # get the project
     my $project = find_project($uri, $apikey, $dat->{project});
-    use Data::Dumper; print Dumper($project);
 
     # get the category
     my $category = find_category($uri, $apikey, $dat->{category}, $project);
 
     # get the user
     my $user = find_user($uri, $apikey, $username);
-    use Data::Dumper; print Dumper($user);
+
+    use Data::Dumper;
+    print Dumper({ username => $username,
+		   user => $user,
+		   project => $project,
+		   category => $category,
+		   package_tree_name => $package_tree_name,
+		   dat => $dat
+		 });
+
 };
 
 sub find_category
