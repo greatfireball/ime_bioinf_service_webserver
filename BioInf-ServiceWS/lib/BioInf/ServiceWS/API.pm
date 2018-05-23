@@ -65,9 +65,11 @@ get '/openproject_users' => sub {
 	my $response = $ua->request($request);
 	my $dat = decode_json($response->decoded_content());
 
-	next unless ($dat->{status} eq "active" || $dat->{status} eq "invited");
+	next unless (exists $dat->{status} && $dat->{status} && ($dat->{status} eq "active" || $dat->{status} eq "invited"));
 	push(@{$data}, sprintf("%s (%s)", $dat->{name}, $dat->{status}));
     }
+
+    @{$data} = sort (@{$data});
 
     return $data;
 };
