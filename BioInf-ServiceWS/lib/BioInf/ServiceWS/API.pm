@@ -54,23 +54,43 @@ get '/openproject_categories' => sub {
 };
 
 get '/openproject_users' => sub {
-    my $data = [];
+    my $data = {};
 
-    # create the request to optain all users
-    foreach my $userid (1..100)
+    # create the request to optain all accessable projects
+    my $ua = LWP::UserAgent->new();
+    my $request = GET $url.'/api/v3/projects';
+    $request->authorization_basic('apikey', $apikey);
+    my $response = $ua->request($request);
+    my $dat = decode_json($response->decoded_content());
+
+    # go through projects and request all categories:
+    foreach my $project (@{$dat->{_embedded}{elements}})
     {
-	my $ua = LWP::UserAgent->new();
-	my $request = GET $url.'/api/v3/users/'.$userid;
+	my $name = $project->{identifier};
+	my $id = $project->{id};
+
+	my $available_assignees_uri = $base_uri.'/av/api/v3/projects/'.$id.'/available_assignees';
+
+	my $request = GET $available_assignees_uri;
 	$request->authorization_basic('apikey', $apikey);
 	my $response = $ua->request($request);
-	my $dat = decode_json($response->decoded_content());
 
-	next unless (exists $dat->{status} && $dat->{status} && ($dat->{status} eq "active" || $dat->{status} eq "invited"));
-	push(@{$data}, sprintf("%s (%s)", $dat->{name}, $dat->{status}));
+	my $available_assignees = decode_json($response->decoded_content());
+
+	foreach my $assignee (@{$available_assignees->{_embedded}{elements}})
+	{
+	    next unless ($assignee->{_type} eq "User");
+	    my $assignee_name = $assignee->{name};
+
+	    push(@{$data->{$name}}, $assignee_name);
+	}
     }
 
-    @{$data} = sort (@{$data});
-
+    # sort user names alphabetically
+    foreach my $project (keys %{$data})
+    {
+	@{$data->{$project}} = sort (@{$data->{$project}});
+    }
     return $data;
 };
 
