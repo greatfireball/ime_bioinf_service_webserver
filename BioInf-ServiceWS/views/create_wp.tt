@@ -45,13 +45,6 @@
             $dropdown.append("<option>"+key+"</option>");
          });
       });
-
-      var $assignee = $("#assigneeselection");
-      $.getJSON("api/openproject_users", function(data) {
-         $.each(data, function(index, value) {
-            $assignee.append("<option>"+value+"</option>");
-         });
-      });
     });
 
     $("#projectselection").change(function() {
@@ -59,18 +52,35 @@
 	var $dropdown = $(this);
 
 	$.getJSON("api/openproject_categories", function(data) {
-	
+
 		var key = $dropdown.val();
 		var vals = ["Select a project above"];
                 if (data.hasOwnProperty(key))
 		{
 		   vals = data[key].split(",");
                 }
-							
+
 		var $secondChoice = $("#categoryselection");
 		$secondChoice.empty();
 		$.each(vals, function(index, value) {
 			$secondChoice.append("<option>" + value + "</option>");
+		});
+
+	});
+
+        $.getJSON("api/openproject_users", function(data) {
+
+		var key = $dropdown.val();
+		var vals = ["Select a project above"];
+                if (data.hasOwnProperty(key))
+		{
+		   vals = data[key].split(",");
+                }
+
+		var $assigneeChoice = $("#assigneeselection");
+		$assigneeChoice.empty();
+		$.each(vals, function(index, value) {
+			$assigneeChoice.append("<option>" + value + "</option>");
 		});
 
 	});
