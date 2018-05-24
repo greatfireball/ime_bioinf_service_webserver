@@ -89,7 +89,7 @@ get '/openproject_users' => sub {
     # sort user names alphabetically
     foreach my $project (keys %{$data})
     {
-	@{$data->{$project}} = join(",", sort (@{$data->{$project}}));
+	$data->{$project} = join(",", sort (@{$data->{$project}}));
     }
     return $data;
 };
