@@ -52,7 +52,7 @@ sub create_wp_4_project
     my %setting = (%{$settings});
     $setting{subject} = $subject;
 
-    my $notify = "";
+    my $notify = "?notify=true";
     if (exists $setting{notify} && $setting{notify} == 0)
     {
 	$notify = "?notify=false";
@@ -150,7 +150,7 @@ sub add_parent
 
     my $wp = get_wp_from_uri($uri, $apikey);
 
-    my $request = HTTP::Request->new(PATCH => $base_uri.$wp->{_links}{changeParent}{href});
+    my $request = HTTP::Request->new(PATCH => $base_uri.$wp->{_links}{changeParent}{href}."?notify=false");
     $request->header("Content_Type" => 'application/json');
     $request->authorization_basic('apikey', $apikey);
     my $data = {
