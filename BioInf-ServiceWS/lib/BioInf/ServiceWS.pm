@@ -52,11 +52,17 @@ sub create_wp_4_project
     my %setting = (%{$settings});
     $setting{subject} = $subject;
 
+    my $notify = "";
+    if (exists $setting{notify} && $setting{notify} == 0)
+    {
+	$notify = "?notify=false";
+    }
+
     my $ua = LWP::UserAgent->new();
     my $u = URI->new($url);
     my $base_uri=$u->scheme."://".$u->host_port;
 
-    my $request = POST $base_uri.$project->{_links}{createWorkPackageImmediate}{href};
+    my $request = POST $base_uri.$project->{_links}{createWorkPackageImmediate}{href}.$notify;
 
     $request->authorization_basic('apikey', $apikey);
 
@@ -96,6 +102,7 @@ sub add_subtree
 
     my $wp = get_wp_from_uri($top_uri, $apikey);
 
+    $settings->{notify} = 0;
     create_child_wp($top_uri, $project, $apikey, "Upload", $settings);
     create_child_wp($top_uri, $project, $apikey, "Cleaning", $settings);
     create_child_wp($top_uri, $project, $apikey, "Correction", $settings);
