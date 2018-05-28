@@ -56,13 +56,18 @@ sub create_wp_4_project
     if (exists $setting{notify} && $setting{notify} == 0)
     {
 	$notify = "?notify=false";
+	delete $setting{notify};
     }
 
     my $ua = LWP::UserAgent->new();
     my $u = URI->new($url);
     my $base_uri=$u->scheme."://".$u->host_port;
 
-    my $request = POST $base_uri.$project->{_links}{createWorkPackageImmediate}{href}.$notify;
+    my $uri = $base_uri.$project->{_links}{createWorkPackageImmediate}{href}.$notify;
+
+    # print Debug info URI
+    print "POST request will be send to '$uri'\n";
+    my $request = POST $uri;
 
     $request->authorization_basic('apikey', $apikey);
 
