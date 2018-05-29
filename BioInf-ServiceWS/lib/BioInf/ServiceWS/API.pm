@@ -32,35 +32,42 @@ get '/openproject_get_topwps' => sub {
     }
 
     # get all working packages and assign them to the projects
-    $request = GET $url.'/api/v3/work_packages';
-    $request->authorization_basic('apikey', $apikey);
-    $response = $ua->request($request);
-    $dat = decode_json($response->decoded_content());
-
-    # go through working packages and assign them
-    foreach my $workingpackage (@{$dat->{_embedded}{elements}})
+    my $wp_counter = 0;
+    while (1==1)
     {
-	my $subject   = $workingpackage->{subject};
-	my $id        = $workingpackage->{id};
+	$request = GET $url.'/api/v3/work_packages?pageSize=1000&offset='.$wp_counter;
+	$request->authorization_basic('apikey', $apikey);
+	$response = $ua->request($request);
+	$dat = decode_json($response->decoded_content());
 
-	my $project   = $workingpackage->{_links}{project};
-	my $ancestors = $workingpackage->{_links}{ancestors};
-	my $children  = $workingpackage->{_links}{children};
+	last unless (@{$dat->{_embedded}{elements}});
 
-	# skip, unless it has children
-	unless ($children && ref($children) eq "ARRAY" && @{$children}>0)
+	# go through working packages and assign them
+	foreach my $workingpackage (@{$dat->{_embedded}{elements}})
 	{
-	    debug "Skipping WP due to missing children: ".Dumper($workingpackage);
-	    next;
-	}
-	# skip, unless the list of ancestors is empty
-	if ($ancestors && ref($ancestors) eq "ARRAY" && @{$ancestors}>0)
-	{
-	    debug "Skipping WP due to existing ancestors: ".Dumper($workingpackage);
-	    next;
-	}
+	    $wp_counter++;
+	    my $subject   = $workingpackage->{subject};
+	    my $id        = $workingpackage->{id};
 
-	push(@{$output->{$project->{href}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
+	    my $project   = $workingpackage->{_links}{project};
+	    my $ancestors = $workingpackage->{_links}{ancestors};
+	    my $children  = $workingpackage->{_links}{children};
+
+	    # skip, unless it has children
+	    unless ($children && ref($children) eq "ARRAY" && @{$children}>0)
+	    {
+		debug "Skipping WP due to missing children: ".Dumper($workingpackage);
+		next;
+	    }
+	    # skip, unless the list of ancestors is empty
+	    if ($ancestors && ref($ancestors) eq "ARRAY" && @{$ancestors}>0)
+	    {
+		debug "Skipping WP due to existing ancestors: ".Dumper($workingpackage);
+		next;
+	    }
+
+	    push(@{$output->{$project->{href}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
+	}
     }
 
     return $output;
