@@ -79,7 +79,7 @@ sub create_wp_4_project
     $request->header("Content-Length" => length($request->content));
 
     # print Debug info URI
-    info "POST request is ".$request->as_string();
+    debug "POST request is ".$request->as_string();
     my $response = $ua->request($request);
 
     my $dat = decode_json($response->decoded_content());
