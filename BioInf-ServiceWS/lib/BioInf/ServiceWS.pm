@@ -41,7 +41,12 @@ post '/create_wp' => sub {
     my $u = URI->new($uri);
     my $base_uri=$u->scheme."://".$u->host_port;
 
-    add_subtree($base_uri, $project, $package_tree_name, $apikey, {assignee => { href => $user }, category => { href => $category }, startDate => $date });
+    my $top_wp = add_subtree($base_uri, $project, $package_tree_name, $apikey, {assignee => { href => $user }, category => { href => $category }, startDate => $date });
+
+    my $href = $base_uri.$top_wp->{_links}{self}{href};
+    # delete api/v3 from $href
+    $href =~ s/api\/v3//;
+    template 'created_wp' => { 'title' => 'Created a working package', 'href' => $href, 'name' => $package_tree_name };
 
 };
 

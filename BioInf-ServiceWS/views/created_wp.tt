@@ -1,0 +1,7 @@
+<div id="page">
+  <h1>Working package creation result</h1>
+  <p>
+    Your working package tree was successfully created.<br />
+    The name for the top-level working package is <% name %> and might be accessed <a href="<% href %>">here</a>.
+  </p>
+</div>
