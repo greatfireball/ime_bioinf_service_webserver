@@ -26,7 +26,9 @@ get '/openproject_get_topwps' => sub {
     foreach my $project (@{$dat->{_embedded}{elements}})
     {
 	my $name = $project->{identifier};
-	$output->{$name} = { href => $project->{_links}{self}{href}, id => $project->{id}, wps => [] };
+	my $href = $project->{_links}{self}{href};
+	my $id   = $project->{id};
+	$output->{$href} = { name => $name, id => $id, wps => [] };
     }
 
     # get all working packages and assign them to the projects
@@ -58,7 +60,7 @@ get '/openproject_get_topwps' => sub {
 	    next;
 	}
 
-	push(@{$output->{$project->{title}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
+	push(@{$output->{$project->{href}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
     }
 
     return $output;
