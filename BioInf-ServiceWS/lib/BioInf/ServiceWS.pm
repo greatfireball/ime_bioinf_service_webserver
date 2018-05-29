@@ -113,21 +113,42 @@ sub add_subtree
     my $wp = get_wp_from_uri($top_uri, $apikey);
 
     $settings->{notify} = 0;
-    create_child_wp($top_uri, $project, $apikey, "Upload", $settings);
-    create_child_wp($top_uri, $project, $apikey, "Cleaning", $settings);
-    create_child_wp($top_uri, $project, $apikey, "Correction", $settings);
-    create_child_wp($top_uri, $project, $apikey, "Genome size estimation", $settings);
+    my $structure = [
+	{ name => "Upload", children => [] },
+	{ name => "Cleaning", children => [] },
+	{ name => "Correction", children => [] },
+	{ name => "Genome size estimation", children => [] },
 
-    my $assembly_uri = create_child_wp($top_uri, $project, $apikey, "Assembly", $settings);
-    create_child_wp($assembly_uri, $project, $apikey, "Masurca", $settings);
-    create_child_wp($assembly_uri, $project, $apikey, "Spades", $settings);
-    create_child_wp($assembly_uri, $project, $apikey, "Unicycler", $settings);
+	{ name => "Assembly", children => [
+	      { name => "Masurca", children => [] },
+	      { name => "Spades", children => [] },
+	      { name => "Unicycler", children => [] },
+	      ] },
 
-    my $annotation_uri = create_child_wp($top_uri, $project, $apikey, "Annotation", $settings);
-    create_child_wp($annotation_uri, $project, $apikey, "GenDB", $settings);
-    create_child_wp($annotation_uri, $project, $apikey, "Arts+Antismash", $settings);
+	{ name => "Annotation", children => [
+	      { name => "GenDB", children => [] },
+	      { name => "Arts+Antismash", children => [] },
+	      ] },
+	];
+
+    create_tree($structure, $top_uri, $project, $apikey, $settings);
 
     return $top_wp;
+}
+
+sub create_tree
+{
+    my ($structure, $top_uri, $project, $apikey, $settings) = @_;
+
+    foreach my $act_item (@{$structure})
+    {
+	my $new_uri = create_child_wp($top_uri, $project, $apikey, $act_item->{name}, $settings);
+	# check if children are existing
+	if (exists $act_item->{children} && ref($act_item->{children}) eq "ARRAY" && @{$act_item->{children}}>0)
+	{
+	    create_tree($act_item->{children}, $new_uri, $project, $apikey, $settings);
+	}
+    }
 }
 
 sub create_child_wp
