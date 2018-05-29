@@ -41,6 +41,8 @@ get '/openproject_get_topwps' => sub {
     {
 	$request = GET $url.'/api/v3/work_packages?pageSize=1000&offset='.$wp_counter;
 	$request->authorization_basic('apikey', $apikey);
+	debug "GET request is ".$request->as_string();
+
 	$response = $ua->request($request);
 
 	unless ($response->is_success) {
