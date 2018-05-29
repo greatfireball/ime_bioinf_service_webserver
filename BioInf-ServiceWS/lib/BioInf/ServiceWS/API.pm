@@ -45,9 +45,9 @@ get '/openproject_get_topwps' => sub {
 	my $children  = $workingpackage->{_links}{children};
 
 	# skip, unless it has children
-	next unless (@{$children}>0);
+	next unless ($children && ref($children) eq "ARRAY" && @{$children}>0);
 	# skip, unless the list of ancestors is empty
-	next if (@{$ancestors}>0);
+	next if ($ancestors && ref($ancestors) eq "ARRAY" && @{$ancestors}>0);
 
 	push(@{$output->{$project->{title}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
     }
