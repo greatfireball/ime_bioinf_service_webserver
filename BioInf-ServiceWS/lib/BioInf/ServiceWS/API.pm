@@ -11,6 +11,50 @@ my $apikey = '';
 my $u = URI->new($url);
 my $base_uri=$u->scheme."://".$u->host_port;
 
+get '/openproject_get_topwps' => sub {
+    my $output = {};
+
+    # create the request to optain all accessable projects
+    my $ua = LWP::UserAgent->new();
+    my $request = GET $url.'/api/v3/projects';
+    $request->authorization_basic('apikey', $apikey);
+    my $response = $ua->request($request);
+    my $dat = decode_json($response->decoded_content());
+
+    # go through projects and request all categories:
+    foreach my $project (@{$dat->{_embedded}{elements}})
+    {
+	my $name = $project->{identifier};
+	$output->{$name} = { href => $project->{_links}{self}{href}, id => $project->{id}, wps => [] };
+    }
+
+    # get all working packages and assign them to the projects
+    $request = GET $url.'/api/v3/work_packages';
+    $request->authorization_basic('apikey', $apikey);
+    $response = $ua->request($request);
+    $dat = decode_json($response->decoded_content());
+
+    # go through working packages and assign them
+    foreach my $workingpackage (@{$dat->{_embedded}{elements}})
+    {
+	my $subject   = $workingpackage->{subject};
+	my $id        = $workingpackage->{id};
+
+	my $project   = $workingpackage->{_links}{project};
+	my $ancestors = $workingpackage->{_links}{ancestors};
+	my $children  = $workingpackage->{_links}{children};
+
+	# skip, unless it has children
+	next unless (@{$children}>0);
+	# skip, unless the list of ancestors is empty
+	next if (@{$ancestors}>0);
+
+	push(@{$output->{$project->{title}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
+    }
+
+    return $output;
+};
+
 get '/openproject_categories' => sub {
     my $data = {};
 
