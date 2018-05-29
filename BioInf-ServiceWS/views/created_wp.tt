@@ -4,4 +4,10 @@
     Your working package tree was successfully created.<br />
     The name for the top-level working package is <% name %> and might be accessed <a href="<% href %>">here</a>.
   </p>
+
+  <p>
+    <form>
+      <input type="button" value="Go back!" onclick="history.back()">
+    </form>
+  </p>
 </div>
