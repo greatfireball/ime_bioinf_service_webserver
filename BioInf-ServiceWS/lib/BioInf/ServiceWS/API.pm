@@ -20,6 +20,10 @@ get '/openproject_get_topwps' => sub {
     my $request = GET $url.'/api/v3/projects';
     $request->authorization_basic('apikey', $apikey);
     my $response = $ua->request($request);
+
+    unless ($response->is_success) {
+	debug $response->status_line;
+    }
     my $dat = decode_json($response->decoded_content());
 
     # go through projects and request all categories:
@@ -38,6 +42,10 @@ get '/openproject_get_topwps' => sub {
 	$request = GET $url.'/api/v3/work_packages?pageSize=1000&offset='.$wp_counter;
 	$request->authorization_basic('apikey', $apikey);
 	$response = $ua->request($request);
+
+	unless ($response->is_success) {
+	    debug $response->status_line;
+	}
 	$dat = decode_json($response->decoded_content());
 
 	last unless (@{$dat->{_embedded}{elements}});
