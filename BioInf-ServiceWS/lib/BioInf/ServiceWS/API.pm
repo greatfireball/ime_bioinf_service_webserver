@@ -36,7 +36,7 @@ get '/openproject_get_topwps' => sub {
     }
 
     # get all working packages and assign them to the projects
-    my $wp_counter = 0;
+    my $wp_counter = 1;
     while (1==1)
     {
 	$request = GET $url.'/api/v3/work_packages?pageSize=1000&offset='.$wp_counter;
@@ -55,7 +55,6 @@ get '/openproject_get_topwps' => sub {
 	# go through working packages and assign them
 	foreach my $workingpackage (@{$dat->{_embedded}{elements}})
 	{
-	    $wp_counter++;
 	    my $subject   = $workingpackage->{subject};
 	    my $id        = $workingpackage->{id};
 
@@ -77,6 +76,9 @@ get '/openproject_get_topwps' => sub {
 	    }
 
 	    push(@{$output->{$project->{href}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
+
+	    # count the processed working package
+	    $wp_counter++;
 	}
     }
 
