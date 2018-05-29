@@ -132,22 +132,26 @@ sub add_subtree
 	{ name => "Annotation:Arts+Antismash", children => [] },
 	];
 
-    create_tree($structure, $top_uri, $project, $apikey, $settings);
+    my $stepsize = 20;
+    my $counter  = 0;
+    create_tree($structure, $top_uri, $project, $apikey, $settings, $stepsize, \$counter);
 
     return $top_wp;
 }
 
 sub create_tree
 {
-    my ($structure, $top_uri, $project, $apikey, $settings) = @_;
+    my ($structure, $top_uri, $project, $apikey, $settings, $stepsize, $counter) = @_;
 
     foreach my $act_item (@{$structure})
     {
-	my $new_uri = create_child_wp($top_uri, $project, $apikey, $act_item->{name}, $settings);
+	${$counter}++;
+	my $wp_name = sprintf("[%03d] %s", ${$counter}*$stepsize, $act_item->{name});
+	my $new_uri = create_child_wp($top_uri, $project, $apikey, $wp_name, $settings);
 	# check if children are existing
 	if (exists $act_item->{children} && ref($act_item->{children}) eq "ARRAY" && @{$act_item->{children}}>0)
 	{
-	    create_tree($act_item->{children}, $new_uri, $project, $apikey, $settings);
+	    create_tree($act_item->{children}, $new_uri, $project, $apikey, $settings, $stepsize, $counter);
 	}
     }
 }
