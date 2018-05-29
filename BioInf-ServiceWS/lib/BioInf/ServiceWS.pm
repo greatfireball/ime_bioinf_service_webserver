@@ -115,20 +115,21 @@ sub add_subtree
     $settings->{notify} = 0;
     my $structure = [
 	{ name => "Upload", children => [] },
-	{ name => "Cleaning", children => [] },
-	{ name => "Correction", children => [] },
-	{ name => "Genome size estimation", children => [] },
+	{ name => "SeqPrep:Cleaning", children => [] },
+	{ name => "SeqPrep:Correction", children => [] },
+	{ name => "SeqPrep:FastQC", children => [] },
+	{ name => "SeqPrep:Flash short reads", children => [] },
+	{ name => "SeqPrep:Genome size estimation", children => [] },
+	{ name => "SeqPrep:Insert size estimation", children => [] },
 
-	{ name => "Assembly", children => [
-	      { name => "Masurca", children => [] },
-	      { name => "Spades", children => [] },
-	      { name => "Unicycler", children => [] },
-	      ] },
+#	{ name => "Assembly", children => [] },
+	{ name => "Assembly:Masurca", children => [] },
+	{ name => "Assembly:Spades", children => [] },
+	{ name => "Assembly:Unicycler", children => [] },
 
-	{ name => "Annotation", children => [
-	      { name => "GenDB", children => [] },
-	      { name => "Arts+Antismash", children => [] },
-	      ] },
+#	{ name => "Annotation", children => [] },
+	{ name => "Annotation:GenDB", children => [] },
+	{ name => "Annotation:Arts+Antismash", children => [] },
 	];
 
     create_tree($structure, $top_uri, $project, $apikey, $settings);
