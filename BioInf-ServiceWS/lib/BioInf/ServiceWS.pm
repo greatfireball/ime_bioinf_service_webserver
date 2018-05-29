@@ -65,8 +65,6 @@ sub create_wp_4_project
 
     my $uri = $base_uri.$project->{_links}{createWorkPackageImmediate}{href}.$notify;
 
-    # print Debug info URI
-    print "POST request will be send to '$uri'\n";
     my $request = POST $uri;
 
     $request->authorization_basic('apikey', $apikey);
@@ -75,6 +73,8 @@ sub create_wp_4_project
     $request->content(to_json(\%setting));
     $request->header("Content-Length" => length($request->content));
 
+    # print Debug info URI
+    info "POST request is ".$request->as_string();
     my $response = $ua->request($request);
 
     my $dat = decode_json($response->decoded_content());
