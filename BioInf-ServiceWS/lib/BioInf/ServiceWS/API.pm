@@ -45,9 +45,17 @@ get '/openproject_get_topwps' => sub {
 	my $children  = $workingpackage->{_links}{children};
 
 	# skip, unless it has children
-	next unless ($children && ref($children) eq "ARRAY" && @{$children}>0);
+	unless ($children && ref($children) eq "ARRAY" && @{$children}>0)
+	{
+	    debug "Skipping WP due to missing children: ".Dumper($workingpackage);
+	    next;
+	}
 	# skip, unless the list of ancestors is empty
-	next if ($ancestors && ref($ancestors) eq "ARRAY" && @{$ancestors}>0);
+	if ($ancestors && ref($ancestors) eq "ARRAY" && @{$ancestors}>0)
+	{
+	    debug "Skipping WP due to existing ancestors: ".Dumper($workingpackage);
+	    next;
+	}
 
 	push(@{$output->{$project->{title}}{wps}}, sprintf("%s(id:%d)", $subject, $id));
     }
