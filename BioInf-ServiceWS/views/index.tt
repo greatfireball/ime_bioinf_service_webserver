@@ -2,11 +2,11 @@
       <div id="sidebar">
         <ul id="sidebar-items">
           <li>
-            <h3>Starting your analyse</h3>
+            <h3>Starting your work</h3>
             <ul class="links">
 
-              <li><a href="arts">ARTS</a></li>
-              <li><a href="antismash">Antismash</a></li>
+              <li><a href="bgc">Run ARTS+Antismash</a></li>
+              <li><a href="create_wp">Create Working packages in Openproject</a></li>
             </ul>
           </li>
 
@@ -52,7 +52,7 @@
 	    
             <p>
 	      Just open an analysis window(,
-	      eg. <a href="arts">ARTS</a>) and submit the required
+	      eg. <a href="bgc">ARTS+Antismash</a>) and submit the required
 	      information. Your job will processed and you will be
 	      informed where to download/view the results via email.
             </p>
