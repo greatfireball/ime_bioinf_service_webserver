@@ -25,8 +25,8 @@
 
     <div class="bgcinputrow">
       <div class="bgcinputlabel"><label>Please select an assignee:</label></div>
-      <div class="bgcinputreq">req.</div>
-      <div class="bgcinputfield"><select id="assigneeselection" name="assignee"><option>Select an assignee</option></select></div>
+      <div class="bgcinputreq"></div>
+      <div class="bgcinputfield"><select id="assigneeselection" name="assignee"><option>Select a project above</option></select></div>
     </div>
 
     <div class="bgcinputrow">
