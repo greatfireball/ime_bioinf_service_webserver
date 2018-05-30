@@ -18,7 +18,7 @@ get '/create_wp' => sub {
 post '/create_wp' => sub {
     my $dat = request->params;
 
-    my $package_tree_name = sprintf("[%s] %s", $dat->{category}, $dat->{wpname});
+    my $package_tree_name = $dat->{wpname};
     my $username = $dat->{assignee};
     $username =~ s/\s+\([^)]+\)$//;
 
