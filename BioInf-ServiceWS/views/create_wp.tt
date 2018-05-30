@@ -19,7 +19,7 @@
 
     <div class="bgcinputrow">
       <div class="bgcinputlabel"><label>Please select an category (create one inside Openproject if required and reload page):</label></div>
-      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputreq"></div>
       <div class="bgcinputfield"><select id="categoryselection" name="category"><option>Select a project above</option></select></div>
     </div>
 
