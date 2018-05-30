@@ -128,8 +128,18 @@ sub add_subtree
 	{ name => "Assembly:Unicycler", children => [] },
 
 #	{ name => "Annotation", children => [] },
-	{ name => "Annotation:GenDB", children => [] },
-	{ name => "Annotation:Arts+Antismash", children => [] },
+	{ name => "Annotation:GenDB(Masurca)", children => [] },
+	{ name => "Annotation:Antismash(Masurca)", children => [] },
+	{ name => "Annotation:Arts(Masurca)", children => [] },
+	{ name => "Annotation:Edgar(Masurca)", children => [] },
+	{ name => "Annotation:GenDB(Spades)", children => [] },
+	{ name => "Annotation:Antismash(Spades)", children => [] },
+	{ name => "Annotation:Arts(Spades)", children => [] },
+	{ name => "Annotation:Edgar(Spades)", children => [] },
+	{ name => "Annotation:GenDB(Unicycler)", children => [] },
+	{ name => "Annotation:Antismash(Unicycler)", children => [] },
+	{ name => "Annotation:Arts(Unicycler)", children => [] },
+	{ name => "Annotation:Edgar(Unicycler)", children => [] },
 	];
 
     my $stepsize = 20;
