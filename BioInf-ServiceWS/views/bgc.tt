@@ -4,6 +4,13 @@
   <p>
     For the BGC analysis you need to specify your input file. If you provide an email address you will be informed via email, when your job was processed.
   </p>
+
+  <p>
+    <em>News:</em><ul>
+      <li>2018-07-16 Update to Antismash v4.2.0 before v4.0.1 was used</li>
+      <li>Release of the submission form</li>
+    </ul>
+  </p>
   <form name="bgcinput" action="/bgc" method="post" enctype="multipart/form-data">
     <div class="bgcinputrow">
       <div class="bgcinputlabel"><label>Please specify your email address:</label></div>
