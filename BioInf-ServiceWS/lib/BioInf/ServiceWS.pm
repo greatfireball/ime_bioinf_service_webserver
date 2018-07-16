@@ -568,6 +568,14 @@ post '/bgc' => sub {
     my $tempname   = request->upload('upload')->tempname;
     my $email      = request->param('email');
     my $jobname    = request->param('jobname');
+    my $borderpred = request->param('borderpredict');
+    if (defined ($borderpred) && $borderpred eq "activated")
+    {
+	$borderpred = 1;
+    } else {
+	$borderpred = 0;
+    }
+	
 
     my ($origfilename, $origdirs, $origsuffix) = fileparse($filename, qr/\.[^.]+$/);
 
@@ -597,6 +605,7 @@ post '/bgc' => sub {
 	prog2run    => [
 	    "antismash" => \1,
 	    "arts"      => \1,
+	    "borderpredict" => \$borderpred
 	    ],
     };
     request->upload('upload')->copy_to($jobfile_complete);
