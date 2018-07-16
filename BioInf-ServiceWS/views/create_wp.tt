@@ -57,7 +57,7 @@
 		var vals = ["Select a project above"];
                 if (data.hasOwnProperty(key))
 		{
-		   vals.push(data[key].split(","));
+		   vals.push.apply(vals, data[key].split(","));
                 }
 
 		var $secondChoice = $("#categoryselection");
@@ -74,7 +74,7 @@
 		var vals = ["Select a project above"];
                 if (data.hasOwnProperty(key))
 		{
-		   vals.push(data[key].split(","));
+		   vals.push.apply(vals, data[key].split(","));
                 }
 
 		var $assigneeChoice = $("#assigneeselection");
