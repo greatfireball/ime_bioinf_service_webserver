@@ -24,6 +24,12 @@
     </div>
 
     <div class="bgcinputrow">
+      <div class="bgcinputlabel" for="borderpredict"><label>Use ClusterFinder algorithm to predict gene cluster borders</label></div>
+      <div class="bgcinputreq"></div>
+      <div class="bgcinputfield"><input type="checkbox" name="borderpredict" value="activated" checked="checked" /></div>
+    </div>
+
+    <div class="bgcinputrow">
       <div class="bgcinputlabel"></div>
       <div class="bgcinputreq"></div>
       <div class="bgcinputfield"><input type="submit" value="submit"></div>
