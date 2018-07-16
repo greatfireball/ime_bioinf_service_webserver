@@ -602,11 +602,11 @@ post '/bgc' => sub {
 	timestamp   => $timestamp,
 	jobfilename => $jobfile,
 	version     => $VERSION,
-	prog2run    => [
+	prog2run    => {
 	    "antismash" => \1,
 	    "arts"      => \1,
 	    "borderpredict" => \$borderpred
-	    ],
+	    },
     };
     request->upload('upload')->copy_to($jobfile_complete);
     open(FH, ">", $jobmetafile) || die "Unable to open '$jobmetafile': $!\n";
