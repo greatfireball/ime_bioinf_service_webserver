@@ -30,7 +30,7 @@ RUN apt update && apt install --yes \
 RUN cpanm install --force \
         Test::Time
 
-RUN cpanm \
+RUN cpanm install \
 	Dancer2 \
 	Dancer2::Plugin::DBIC \
 	Dancer::Plugin::ProxyPath \
