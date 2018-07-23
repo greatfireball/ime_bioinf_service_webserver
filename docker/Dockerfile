@@ -27,6 +27,9 @@ RUN apt update && apt install --yes \
 	pngquant \
 	mysql-client
 
+RUN cpanm install --force \
+        Test::Time
+
 RUN cpanm \
 	Dancer2 \
 	Dancer2::Plugin::DBIC \
