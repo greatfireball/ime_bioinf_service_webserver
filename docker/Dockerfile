@@ -1,6 +1,12 @@
 ARG version=xenial
 FROM ubuntu:${version}
 
+ARG VERSION=master
+ARG VCS_REF
+ARG BUILD_DATE
+
+RUN echo "VCS_REF: "${VCS_REF}", BUILD_DATE: "${BUILD_DATE}", VERSION: "${VERSION}
+
 LABEL maintainer="frank.foerster@ime.fraunhofer.de" \
       description="Dockerfile providing our internal service webserver" \
       version="$VERSION" \
