@@ -9,7 +9,7 @@ use HTTP::Request::Common;
 use DateTime;
 use DateTime::TimeZone;
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 get '/create_wp' => sub {
     template 'create_wp';
