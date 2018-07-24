@@ -33,6 +33,5 @@ RUN cpanm install --force \
 RUN cpanm install \
 	Dancer2 \
 	Dancer2::Plugin::DBIC \
-	Dancer::Plugin::ProxyPath \
 	Bio::TreeIO \
 	SVG::Graph
