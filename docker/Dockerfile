@@ -34,4 +34,5 @@ RUN cpanm install \
 	Dancer2 \
 	Dancer2::Plugin::DBIC \
 	Bio::TreeIO \
-	SVG::Graph
+	SVG::Graph \
+	Plack::Handler::Starman
