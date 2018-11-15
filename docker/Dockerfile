@@ -25,6 +25,7 @@ RUN apt update && apt install --yes \
 	libapache-logformat-compiler-perl \
 	pbzip2 \
 	pngquant \
+	tzdata \
 	mysql-client
 
 RUN cpanm install --force \
