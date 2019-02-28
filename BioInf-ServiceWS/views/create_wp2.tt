@@ -56,7 +56,7 @@
 		var key = $dropdown.val();
                 var vals = ["Select a project above"];
 
-                var foundindex = data.findIndex(function(element){ element.id == key });
+                var foundindex = data.findIndex(function(element){ return element.id == key });
                 if (foundindex != -1)
                 {
                    if (data[foundindex].hasOwnProperty("categories"))
