@@ -271,6 +271,7 @@ sub deepFirstSearch
 	push(@{$output}, {
 	    id => $node,
 	    name => $projects->{$node}{name},
+	    identifier => $projects->{$node}{identifier},
 	    level => $current_level
 	     });
     }
