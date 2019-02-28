@@ -201,6 +201,23 @@ get '/openproject_categories2' => sub {
 	    $projects->{$project_id}{$source_key} = $element->{$source_key} unless (exists $projects->{$project_id}{$source_key});
 	}
 
+	my $category_uri = $_u->scheme."://".$_u->host_port.$projects->{_links}{categories}{href};
+
+	my $request = GET $category_uri;
+	$request->authorization_basic('apikey', $_apikey);
+	my $response = $ua->request($request);
+
+	my $categories = decode_json($response->decoded_content());
+
+	$projects->{categories} = [];
+
+	foreach my $cat (@{$categories->{_embedded}{elements}})
+	{
+	    next unless ($cat->{_type} eq "Category");
+	    push(@{$projects->{categories}}, $cat->{_links}{self}{title})
+	}
+	$projects->{categories} = join(",", @{$projects->{categoryies}});
+
 	my $children = &get_child_projects($project_id, $_url, $_apikey);
 
 	foreach my $child_id (@{$children})
@@ -269,10 +286,11 @@ sub deepFirstSearch
     {
 	# save the current node in output
 	push(@{$output}, {
-	    id => $node,
-	    name => $projects->{$node}{name},
+	    id         => $node,
+	    name       => $projects->{$node}{name},
 	    identifier => $projects->{$node}{identifier},
-	    level => $current_level
+	    categories => $projects->{$node}{categories},
+	    level      => $current_level
 	     });
     }
 
