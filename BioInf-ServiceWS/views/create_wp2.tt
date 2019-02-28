@@ -61,7 +61,7 @@
                 {
                    if (data[foundindex].hasOwnProperty("categories"))
                    {
-		      vals.push.apply(vals, data[key].categories.split(","));
+		      vals.push.apply(vals, data[foundindex].categories.split(","));
                    } else {
                       vals = ["No categories defined"];
                    }
