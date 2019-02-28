@@ -89,9 +89,9 @@ post '/create_w*' => sub {
 	# ensure, that only name and children-tags are allowed
 	foreach my $item (@{$structure})
 	{
-	    unless (keys %{$item} == 2 && exists $item->{name} && exists $item->{children} && ref($item->{children}) eq "ARRAY" && $item->{name} =~ /S+/)
+	    unless (ref($item) eq "HASH" && int(keys %{$item}) == 2 && exists $item->{name} && exists $item->{children} && ref($item->{children}) eq "ARRAY" && $item->{name} =~ /\S+/)
 	    {
-		die "ERROR in dataset ".Dumper($structure);
+		debug "ERROR in dataset\n".Dumper($structure)."\n";
 	    }
 	}
     }
