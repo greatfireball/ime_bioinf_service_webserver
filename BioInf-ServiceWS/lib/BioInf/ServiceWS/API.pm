@@ -204,8 +204,13 @@ get '/openproject_categories2' => sub {
 	my $category_uri = $_url->scheme."://".$_url->host_port.$projects->{_links}{categories}{href};
 
 	my $request = GET $category_uri;
+	debug "Requesting categories by: $category_uri\n";
 	$request->authorization_basic('apikey', $_apikey);
 	my $response = $ua->request($request);
+
+	unless ($response->is_success) {
+	    debug $response->status_line;
+	}
 
 	my $categories = decode_json($response->decoded_content());
 
