@@ -15,6 +15,14 @@ get '/create_wp' => sub {
     template 'create_wp';
 };
 
+get '/create_wp2' => sub {
+    template 'create_wp2';
+};
+
+post '/create_wp2', sub {
+    redirect '/create_wp';
+};
+
 post '/create_wp' => sub {
     my $dat = request->params;
 
