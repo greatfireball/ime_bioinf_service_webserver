@@ -42,7 +42,7 @@
       var $dropdown = $("#projectselection");
       $.getJSON("api/openproject_categories2", function(data) {
          $.each(data, function(key, value) {
-            $dropdown.append("<option value=\""+key+"\">"+value.name+"</option>");
+            $dropdown.append("<option value=\""+value.id+"\">"+value.name+"</option>");
          });
       });
     });
