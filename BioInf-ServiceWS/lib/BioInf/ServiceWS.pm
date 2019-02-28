@@ -19,8 +19,10 @@ get '/create_wp2' => sub {
     template 'create_wp2';
 };
 
-post '/create_wp*' => sub {
+post '/create_w*' => sub {
     my $dat = request->params;
+
+    debug "Called: create_w* with the following parameter: ".Dumper($dat);
 
     my $package_tree_name = $dat->{wpname};
     my $username = $dat->{assignee};
@@ -58,7 +60,45 @@ post '/create_wp*' => sub {
     {
 	$settings->{startDate} = $date;
     }
-    my $top_wp = add_subtree($base_uri, $project, $package_tree_name, $apikey, $settings);
+
+    my $default_structure = [
+	{ name => "Upload", children => [] },
+	{ name => "SeqPrep:Cleaning", children => [] },
+	{ name => "SeqPrep:Correction", children => [] },
+	{ name => "SeqPrep:FastQC", children => [] },
+	{ name => "SeqPrep:Flash short reads", children => [] },
+	{ name => "SeqPrep:Genome size estimation", children => [] },
+	{ name => "SeqPrep:Insert size estimation", children => [] },
+
+#	{ name => "Assembly", children => [] },
+	{ name => "Assembly:Masurca", children => [] },
+	{ name => "Assembly:Spades", children => [] },
+	{ name => "Assembly:Unicycler", children => [] },
+
+#	{ name => "Annotation", children => [] },
+	{ name => "Annotation:GenDB", children => [] },
+	{ name => "Annotation:Antismash", children => [] },
+	{ name => "Annotation:Arts", children => [] },
+	{ name => "Annotation:Edgar", children => [] },
+	];
+
+    my $structure;
+    if (exists $dat->{structure})
+    {
+	$structure = decode_json($dat->{structure});
+	# ensure, that only name and children-tags are allowed
+	foreach my $item (@{$structure})
+	{
+	    unless (keys %{$item} == 2 && exists $item->{name} && exists $item->{children} && ref($item->{children}) eq "ARRAY" && $item->{name} =~ /S+/)
+	    {
+		die "ERROR in dataset ".Dumper($structure);
+	    }
+	}
+    }
+    # if the structure is not defined... Use default structure
+    $structure = $default_structure unless $structure;
+
+    my $top_wp = add_subtree($base_uri, $project, $package_tree_name, $apikey, $settings, $structure);
 
     my $href = $base_uri.$top_wp->{_links}{self}{href};
     # delete api/v3 from $href
@@ -122,7 +162,7 @@ sub get_wp_from_uri
 
 sub add_subtree
 {
-    my ($base_uri, $project, $top_name, $apikey, $settings) = @_;
+    my ($base_uri, $project, $top_name, $apikey, $settings, $structure) = @_;
 
     my $top_wp = create_wp_4_project($base_uri, $project, $top_name, $apikey, $settings);
     my $top_uri = $base_uri.$top_wp->{_links}{self}{href};
@@ -130,26 +170,6 @@ sub add_subtree
     my $wp = get_wp_from_uri($top_uri, $apikey);
 
     $settings->{notify} = 0;
-    my $structure = [
-	{ name => "Upload", children => [] },
-	{ name => "SeqPrep:Cleaning", children => [] },
-	{ name => "SeqPrep:Correction", children => [] },
-	{ name => "SeqPrep:FastQC", children => [] },
-	{ name => "SeqPrep:Flash short reads", children => [] },
-	{ name => "SeqPrep:Genome size estimation", children => [] },
-	{ name => "SeqPrep:Insert size estimation", children => [] },
-
-#	{ name => "Assembly", children => [] },
-	{ name => "Assembly:Masurca", children => [] },
-	{ name => "Assembly:Spades", children => [] },
-	{ name => "Assembly:Unicycler", children => [] },
-
-#	{ name => "Annotation", children => [] },
-	{ name => "Annotation:GenDB", children => [] },
-	{ name => "Annotation:Antismash", children => [] },
-	{ name => "Annotation:Arts", children => [] },
-	{ name => "Annotation:Edgar", children => [] },
-	];
 
     my $stepsize = 20;
     my $counter  = 0;
