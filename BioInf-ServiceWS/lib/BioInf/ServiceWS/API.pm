@@ -247,7 +247,7 @@ get '/openproject_categories2' => sub {
 
     foreach my $curr (@output)
     {
-	$curr->{name} = " "x($curr->{level}*3)."==> ".$curr->{name};
+	$curr->{name} = "="x($curr->{level}*3)."> ".$curr->{name};
     }
 
     return \@output;
