@@ -55,9 +55,9 @@
 
 		var key = $dropdown.val();
 		var vals = ["Select a project above"];
-                if (data.hasOwnProperty(key) && data.key.hasOwnProperty(categories))
+                if (data.hasOwnProperty(key) && data[key].hasOwnProperty("categories"))
 		{
-		   vals.push.apply(vals, data.key.categories.split(","));
+		   vals.push.apply(vals, data[key].categories.split(","));
                 } else {
                    vals = ["No categories defined"];
                 }
