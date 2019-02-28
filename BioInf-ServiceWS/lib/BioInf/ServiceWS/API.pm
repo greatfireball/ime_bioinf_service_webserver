@@ -221,7 +221,7 @@ get '/openproject_categories2' => sub {
 	    next unless ($cat->{_type} eq "Category");
 	    push(@{$projects->{categories}}, $cat->{_links}{self}{title})
 	}
-	$projects->{categories} = join(",", @{$projects->{categoryies}});
+	$projects->{categories} = join(",", @{$projects->{categories}});
 
 	my $children = &get_child_projects($project_id, $_url, $_apikey);
 
