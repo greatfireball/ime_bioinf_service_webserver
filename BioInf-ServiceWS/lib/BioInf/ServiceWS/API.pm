@@ -174,7 +174,7 @@ get '/openproject_categories2' => sub {
     # create the request to optain all accessable projects
     my $ua = LWP::UserAgent->new();
     my $request = GET $_url.'/api/v3/projects';
-    $request->authorization_basic('_apikey', $_apikey);
+    $request->authorization_basic('apikey', $_apikey);
     my $response = $ua->request($request);
 
     unless ($response->is_success) {
@@ -201,7 +201,7 @@ get '/openproject_categories2' => sub {
 	    $projects->{$project_id}{$source_key} = $element->{$source_key} unless (exists $projects->{$project_id}{$source_key});
 	}
 
-	my $children = get_child_projects($project_id, $_url, $_apikey);
+	my $children = &get_child_projects($project_id, $_url, $_apikey);
 
 	foreach my $child_id (@{$children})
 	{
@@ -243,7 +243,7 @@ get '/openproject_categories2' => sub {
 
     my @output = ();
 
-    deepFirstSearch($projects, $top_node_id, \@output, $min_level);
+    &deepFirstSearch($projects, $top_node_id, \@output, $min_level);
 
     foreach my $curr (@output)
     {
@@ -251,7 +251,7 @@ get '/openproject_categories2' => sub {
     }
 
     return \@output;
-}
+};
 
 sub deepFirstSearch
 {
@@ -295,11 +295,11 @@ sub deepFirstSearch
 
 sub get_child_projects
 {
-    my ($id, $url, $apikey) = @_;
+    my ($id, $_url, $_apikey) = @_;
 
     my $ua = LWP::UserAgent->new();
-    my $request = GET $url.'/api/v3/projects?filters=[{"ancestor":{"operator":"=","values":["'.$id.'"]}}]';
-    $request->authorization_basic('apikey', $apikey);
+    my $request = GET $_url.'/api/v3/projects?filters=[{"ancestor":{"operator":"=","values":["'.$id.'"]}}]';
+    $request->authorization_basic('apikey', $_apikey);
     my $response = $ua->request($request);
 
     unless ($response->is_success) {
