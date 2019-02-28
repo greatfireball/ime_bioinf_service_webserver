@@ -247,7 +247,12 @@ get '/openproject_categories2' => sub {
 
     foreach my $curr (@output)
     {
-	$curr->{name} = "="x($curr->{level}*3)."> ".$curr->{name};
+	my $indent = "";
+	if ($curr->{level}>0)
+	{
+	    $indent = "="x($curr->{level}*2)."> ";
+	}
+	$curr->{name} = $indent.$curr->{name};
     }
 
     return \@output;
