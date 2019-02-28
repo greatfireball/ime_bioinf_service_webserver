@@ -214,14 +214,14 @@ get '/openproject_categories2' => sub {
 
 	my $categories = decode_json($response->decoded_content());
 
-	$projects->{categories} = [];
+	$projects->{$project_id}{categories} = [];
 
 	foreach my $cat (@{$categories->{_embedded}{elements}})
 	{
 	    next unless ($cat->{_type} eq "Category");
-	    push(@{$projects->{categories}}, $cat->{_links}{self}{title})
+	    push(@{$projects->{$project_id}{categories}}, $cat->{_links}{self}{title})
 	}
-	$projects->{categories} = join(",", @{$projects->{categories}});
+	$projects->{$project_id}{categories} = join(",", @{$projects->{$project_id}{categories}});
 
 	my $children = &get_child_projects($project_id, $_url, $_apikey);
 
