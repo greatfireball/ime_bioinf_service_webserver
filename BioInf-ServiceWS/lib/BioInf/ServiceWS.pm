@@ -8,6 +8,7 @@ use LWP::UserAgent;
 use HTTP::Request::Common;
 use DateTime;
 use DateTime::TimeZone;
+use MIME::Base64;
 
 our $VERSION = '0.2.1';
 
@@ -85,7 +86,7 @@ post '/create_w*' => sub {
     my $structure;
     if (exists $dat->{structure})
     {
-	$structure = decode_json($dat->{structure});
+	$structure = decode_json(decode_base64($dat->{structure}));
 	# ensure, that only name and children-tags are allowed
 	foreach my $item (@{$structure})
 	{
