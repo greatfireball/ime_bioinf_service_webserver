@@ -19,11 +19,7 @@ get '/create_wp2' => sub {
     template 'create_wp2';
 };
 
-post '/create_wp2', sub {
-    redirect '/create_wp';
-};
-
-post '/create_wp' => sub {
+post '/create_wp*' => sub {
     my $dat = request->params;
 
     my $package_tree_name = $dat->{wpname};
