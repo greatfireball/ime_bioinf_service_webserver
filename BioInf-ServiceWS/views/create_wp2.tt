@@ -55,9 +55,11 @@
 
 		var key = $dropdown.val();
 		var vals = ["Select a project above"];
-                if (data.hasOwnProperty(key))
+                if (data.hasOwnProperty(key) && data.key.hasOwnProperty(categories))
 		{
 		   vals.push.apply(vals, data.key.categories.split(","));
+                } else {
+                   vals = ["No categories defined"];
                 }
 
 		var $secondChoice = $("#categoryselection");
