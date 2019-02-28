@@ -201,7 +201,7 @@ get '/openproject_categories2' => sub {
 	    $projects->{$project_id}{$source_key} = $element->{$source_key} unless (exists $projects->{$project_id}{$source_key});
 	}
 
-	my $category_uri = $_u->scheme."://".$_u->host_port.$projects->{_links}{categories}{href};
+	my $category_uri = $_url->scheme."://".$_url->host_port.$projects->{_links}{categories}{href};
 
 	my $request = GET $category_uri;
 	$request->authorization_basic('apikey', $_apikey);
