@@ -54,12 +54,19 @@
 	$.getJSON("api/openproject_categories2", function(data) {
 
 		var key = $dropdown.val();
-		var vals = ["Select a project above"];
-                if (data.hasOwnProperty(key) && data[key].hasOwnProperty("categories"))
-		{
-		   vals.push.apply(vals, data[key].categories.split(","));
+                var vals = ["Select a project above"];
+
+                var foundindex = data.findIndex(function(element){ element.id == key });
+                if (foundindex != -1)
+                {
+                   if (data[foundindex].hasOwnProperty("categories"))
+                   {
+		      vals.push.apply(vals, data[key].categories.split(","));
+                   } else {
+                      vals = ["No categories defined"];
+                   }
                 } else {
-                   vals = ["No categories defined"];
+                   vals = ["Error with project id"];
                 }
 
 		var $secondChoice = $("#categoryselection");
