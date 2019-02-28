@@ -42,7 +42,7 @@
       var $dropdown = $("#projectselection");
       $.getJSON("api/openproject_categories2", function(data) {
          $.each(data, function(key, value) {
-            $dropdown.append("<option value=\""+value.id+"\">"+value.name+"</option>");
+            $dropdown.append("<option value=\""+value.identifier+"\">"+value.name+"</option>");
          });
       });
     });
@@ -56,7 +56,7 @@
 		var key = $dropdown.val();
                 var vals = ["Select a project above"];
 
-                var foundindex = data.findIndex(function(element){ return element.id == key });
+                var foundindex = data.findIndex(function(element){ return element.identifier == key });
                 if (foundindex != -1)
                 {
                    if (data[foundindex].hasOwnProperty("categories"))

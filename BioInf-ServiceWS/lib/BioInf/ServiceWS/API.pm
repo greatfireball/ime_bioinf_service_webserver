@@ -196,7 +196,7 @@ get '/openproject_categories2' => sub {
 	    $projects->{$project_id}{children} = {} unless (exists $projects->{$project_id}{children});
 	}
 
-	foreach my $source_key (qw(name createdAt updatedAt))
+	foreach my $source_key (qw(name createdAt updatedAt identifier))
 	{
 	    $projects->{$project_id}{$source_key} = $element->{$source_key} unless (exists $projects->{$project_id}{$source_key});
 	}
