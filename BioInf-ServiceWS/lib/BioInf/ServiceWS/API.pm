@@ -168,4 +168,148 @@ get '/openproject_users' => sub {
     return $data;
 };
 
+get '/openproject_categories2' => sub {
+    my ($_url, $_apikey) = ($u, $apikey);
+
+    # create the request to optain all accessable projects
+    my $ua = LWP::UserAgent->new();
+    my $request = GET $_url.'/api/v3/projects';
+    $request->authorization_basic('_apikey', $_apikey);
+    my $response = $ua->request($request);
+
+    unless ($response->is_success) {
+	debug $response->status_line;
+    }
+    my $dat = decode_json($response->decoded_content());
+
+    my $projects = {};
+
+    foreach my $element (@{$dat->{_embedded}{elements}})
+    {
+	my $project_id = $element->{id};
+	if (! exists $projects->{$project_id})
+	{
+	    $projects->{$project_id}{ancestor} = {};
+	    $projects->{$project_id}{children} = {};
+	} else {
+	    $projects->{$project_id}{ancestor} = {} unless (exists $projects->{$project_id}{ancestor});
+	    $projects->{$project_id}{children} = {} unless (exists $projects->{$project_id}{children});
+	}
+
+	foreach my $source_key (qw(name createdAt updatedAt))
+	{
+	    $projects->{$project_id}{$source_key} = $element->{$source_key} unless (exists $projects->{$project_id}{$source_key});
+	}
+
+	my $children = get_child_projects($project_id, $_url, $_apikey);
+
+	foreach my $child_id (@{$children})
+	{
+	    $projects->{$project_id}{children}{$child_id}++;
+	    $projects->{$child_id}{ancestor}{$project_id}++;
+	}
+    }
+
+    # generate a level for each project
+    my $min_level;
+    foreach my $project (keys %{$projects})
+    {
+	$projects->{$project}{level} = int(keys %{$projects->{$project}{ancestor}});
+
+	# check if the level is smaller than the levels before:
+	if ((! defined $min_level) || $min_level>$projects->{$project}{level})
+	{
+	    $min_level = $projects->{$project}{level};
+	}
+    }
+
+    print STDERR "Min_level: $min_level\n";
+    # combine all top nodes into a super-node
+    my @top_projects = sort {$projects->{$a}{name} cmp $projects->{$b}{name}} ( grep { $projects->{$_}{level} == $min_level } (keys %{$projects}) );
+
+    my $top_node_id = 0;
+    while (exists $projects->{$top_node_id})
+    {
+	$top_node_id--;
+    }
+
+    $projects->{$top_node_id}{level} = $min_level-1;
+
+    foreach my $id (@top_projects)
+    {
+	$projects->{$top_node_id}{children}{$id}++;
+	$projects->{$id}{ancestor}{$top_node_id}++;
+    }
+
+    my @output = ();
+
+    deepFirstSearch($projects, $top_node_id, \@output, $min_level);
+
+    foreach my $curr (@output)
+    {
+	print STDERR " "x($curr->{level}*3)."==> ", join("\t", ($curr->{name}, $curr->{id})), "\n";
+    }
+
+    return \@output;
+}
+
+sub deepFirstSearch
+{
+    my ($projects, $node, $output, $min_level) = @_;
+
+    # get the level for the node
+    my $current_level = $projects->{$node}{level};
+
+    if ($current_level>=$min_level)
+    {
+	# save the current node in output
+	push(@{$output}, {
+	    id => $node,
+	    name => $projects->{$node}{name},
+	    level => $current_level
+	     });
+    }
+
+    # get all children
+    my @children = grep {
+	exists $projects->{$_}{ancestor}{$node}
+	&&
+	$projects->{$_}{level}>$current_level
+    } (keys %{$projects});
+
+    return unless (@children);
+
+    # sort the children by level and keep only the lowest
+    @children = sort {$projects->{$a}{level} <=> $projects->{$b}{level}} (@children);
+    my $req_level = $projects->{$children[0]}{level};
+    @children = grep { $projects->{$_}{level} == $req_level } (@children);
+
+    # sort by name
+    @children = sort {$projects->{$a}{name} cmp $projects->{$b}{name}} (@children);
+    # call DFS for each child
+    foreach my $child (@children)
+    {
+	deepFirstSearch($projects, $child, $output, $min_level);
+    }
+}
+
+sub get_child_projects
+{
+    my ($id, $url, $apikey) = @_;
+
+    my $ua = LWP::UserAgent->new();
+    my $request = GET $url.'/api/v3/projects?filters=[{"ancestor":{"operator":"=","values":["'.$id.'"]}}]';
+    $request->authorization_basic('apikey', $apikey);
+    my $response = $ua->request($request);
+
+    unless ($response->is_success) {
+	debug $response->status_line;
+    }
+    my $dat = decode_json($response->decoded_content());
+
+    my @ids_4_children = map { $_->{id} } (@{$dat->{_embedded}{elements}});
+
+    return (\@ids_4_children);
+}
+
 1;
