@@ -340,6 +340,21 @@ get '/antismash' => sub {
     forward '/bgc';
 };
 
+get '/bigscape/:id/**' => sub {
+
+    my $id   = route_parameters->get('id');
+    my ($tags) = splat;
+
+    my $filename = join("/", ('/run/bigscape', $id, @{$tags}));
+    print STDERR "BIGScape: $filename\n";
+    if (-e $filename)
+    {
+	send_file($filename, system_path => 1);
+    } else {
+	send_error "Sorry, this path is invalid", 404;
+    }
+};
+
 get '/arts/:id/**' => sub {
 
     my $id   = route_parameters->get('id');
