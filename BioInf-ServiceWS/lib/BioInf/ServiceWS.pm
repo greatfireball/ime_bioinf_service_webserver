@@ -122,7 +122,7 @@ sub create_wp_4_project
 	delete $setting{notify};
     }
 
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
     my $u = URI->new($url);
     my $base_uri=$u->scheme."://".$u->host_port;
 
@@ -149,7 +149,7 @@ sub get_wp_from_uri
 {
     my ($uri, $apikey) = @_;
 
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
 
     my $request = GET $uri;
     $request->authorization_basic('apikey', $apikey);
@@ -235,7 +235,7 @@ sub add_parent
     $request->content(to_json($data));
     $request->header("Content-Length" => length($request->content));
 
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
     my $response = $ua->request($request);
 
     my $dat = decode_json($response->decoded_content());
@@ -246,7 +246,7 @@ sub add_parent
 sub find_category
 {
     my ($url, $apikey, $category, $project) = @_;
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
 
     my $u = URI->new($url);
     my $base_uri=$u->scheme."://".$u->host_port;
@@ -274,7 +274,7 @@ sub find_category
 sub find_project
 {
     my ($url, $apikey, $projectid) = @_;
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
 
     my $request = GET $url.'/api/v3/projects';
 
@@ -299,7 +299,7 @@ sub find_project
 sub find_user
 {
     my ($url, $apikey, $username) = @_;
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
 
     my $user = undef;
 

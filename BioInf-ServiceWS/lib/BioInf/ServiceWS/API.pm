@@ -16,7 +16,7 @@ get '/openproject_get_topwps' => sub {
     my $output = {};
 
     # create the request to optain all accessable projects
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
     my $request = GET $url.'/api/v3/projects';
     $request->authorization_basic('apikey', $apikey);
     my $response = $ua->request($request);
@@ -89,10 +89,11 @@ get '/openproject_categories' => sub {
     my $data = {};
 
     # create the request to optain all accessable projects
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
     my $request = GET $url.'/api/v3/projects';
     $request->authorization_basic('apikey', $apikey);
     my $response = $ua->request($request);
+
     my $dat = decode_json($response->decoded_content());
 
     # go through projects and request all categories:
@@ -131,7 +132,7 @@ get '/openproject_users' => sub {
     my $data = {};
 
     # create the request to optain all accessable projects
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
     my $request = GET $url.'/api/v3/projects';
     $request->authorization_basic('apikey', $apikey);
     my $response = $ua->request($request);
@@ -143,7 +144,7 @@ get '/openproject_users' => sub {
 	my $name = $project->{identifier};
 	my $id = $project->{id};
 
-	my $available_assignees_uri = $base_uri.'/av/api/v3/projects/'.$id.'/available_assignees';
+	my $available_assignees_uri = $base_uri.'/api/v3/projects/'.$id.'/available_assignees';
 
 	my $request = GET $available_assignees_uri;
 	$request->authorization_basic('apikey', $apikey);
@@ -172,7 +173,7 @@ get '/openproject_categories2' => sub {
     my ($_url, $_apikey) = ($u, $apikey);
 
     # create the request to optain all accessable projects
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
     my $request = GET $_url.'/api/v3/projects';
     $request->authorization_basic('apikey', $_apikey);
     my $response = $ua->request($request);
@@ -204,7 +205,7 @@ get '/openproject_categories2' => sub {
 	my $category_uri = $_url->scheme."://".$_url->host_port.$element->{_links}{categories}{href};
 
 	my $request = GET $category_uri;
-	debug "Requesting categories by: $category_uri\n";
+
 	$request->authorization_basic('apikey', $_apikey);
 	my $response = $ua->request($request);
 
@@ -326,7 +327,7 @@ sub get_child_projects
 {
     my ($id, $_url, $_apikey) = @_;
 
-    my $ua = LWP::UserAgent->new();
+    my $ua = LWP::UserAgent->new( ssl_opts => { SSL_verify_mode => 0, verify_hostname => 0 } );
     my $request = GET $_url.'/api/v3/projects?filters=[{"ancestor":{"operator":"=","values":["'.$id.'"]}}]';
     $request->authorization_basic('apikey', $_apikey);
     my $response = $ua->request($request);
