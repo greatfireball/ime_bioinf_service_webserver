@@ -10,6 +10,8 @@ use DateTime;
 use DateTime::TimeZone;
 use MIME::Base64;
 
+use BioInf::ServiceWS::Translate;
+
 our $VERSION = '0.2.1';
 
 get '/create_wp' => sub {
@@ -18,6 +20,23 @@ get '/create_wp' => sub {
 
 get '/create_wp2' => sub {
     template 'create_wp2';
+};
+
+get '/optimize_aa' => sub {
+    template 'optimize_aa';
+};
+
+post '/optimize_aa' => sub {
+    my $dat = request->params;
+
+    use Data::Dumper; print STDERR Dumper($dat);
+
+    my $matrix_parsed = BioInf::ServiceWS::Translate::parse_kazusa_matrix();
+    print STDERR Dumper($matrix_parsed);
+
+    my $data = BioInf::ServiceWS::Translate::return_gff3($dat->{fiveprimeseq}, BioInf::ServiceWS::Translate::translate_aa_2_nucl($dat->{aaseq}, $matrix_parsed), $dat->{threeprimeseq}, $dat->{seqname});
+
+    return send_file (\$data, filename => $dat->{seqname}.".gff3", content_type => 'text/txt', charset => 'utf-8');
 };
 
 post '/create_w*' => sub {

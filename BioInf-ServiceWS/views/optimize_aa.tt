@@ -1,0 +1,44 @@
+<div id="page">
+  <h1>Optimize expression of amino acid sequences</h1>
+
+  <p>
+    Here you are able to create optimized nucleotide sequences for a given amino acid sequence.
+  </p>
+  <form name="optimzeaa" method="post" enctype="multipart/form-data">
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please specify a name for the sequence:</label></div>
+      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputfield"><input type="seqname" name="seqname"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please select target organism:</label></div>
+      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputfield"><select id="targetselection" name="targetselection"><option>E. coli</option></select></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please specify a nucleotid sequence on 5' end:</label></div>
+      <div class="bgcinputreq"></div>
+      <div class="bgcinputfield"><input type="fiveprimeseq" name="fiveprimeseq" value="GCGAATTAATACGACTCACTATAGGGCTTAAGTATAAGGAGGAAAAAATATG"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please specify a nucleotid sequence on 3' end:</label></div>
+      <div class="bgcinputreq"></div>
+      <div class="bgcinputfield"><input type="threeprimeseq" name="threeprimeseq" value="TAACTAGCATAACCCCTCTCTAAACGGAGGGGTTT"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please specify an amino acid sequence to optimize' end:</label></div>
+      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputfield"><input type="aaseq" name="aaseq"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"></div>
+      <div class="bgcinputreq"></div>
+      <div class="bgcinputfield"><input type="submit" value="submit"></div>
+    </div>
+  </form>
+</div>
