@@ -12,7 +12,7 @@ use MIME::Base64;
 
 use BioInf::ServiceWS::Translate;
 
-our $VERSION = '0.2.2';
+our $VERSION = '0.2.3';
 
 get '/create_wp' => sub {
     template 'create_wp';

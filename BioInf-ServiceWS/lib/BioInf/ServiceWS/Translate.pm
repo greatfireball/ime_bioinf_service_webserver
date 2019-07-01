@@ -91,13 +91,13 @@ sub return_gff3 {
 	{seq => $three_prime, type => "three_prime_coding_exon_noncoding_region",  id_extention => "three_prime_addition"}
 	)
     {
-	my $id = $name;
+	my $namefield = $name;
 	if( exists $entry->{id_extention} && "" ne $entry->{id_extention})
 	{
-	    $id .= ".".$entry->{id_extention};
+	    $namefield .= ".".$entry->{id_extention};
 	}
 	$gff          .= join("\t",
-			      $name,
+			      $file_name,
 			      "fftool",
 			      $entry->{type},
 			      length($seq_complete)+1,
@@ -105,13 +105,13 @@ sub return_gff3 {
 			      ".",
 			      "+",
 			      ".",
-			      "ID=".$id
+			      "ID=".$name.".".$entry->{type}.";Name=".$namefield
 	    )."\n";
 	$seq_complete .= $entry->{seq};
     }
 
     $gff .= "##FASTA\n";
-    $gff .= ">$name\n$seq_complete\n";
+    $gff .= ">$file_name\n$seq_complete\n";
 
     return $gff;
 }
