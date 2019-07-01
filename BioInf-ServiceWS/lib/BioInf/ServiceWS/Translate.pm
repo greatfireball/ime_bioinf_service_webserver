@@ -7,9 +7,12 @@ use Data::Dumper;
 
 #set serializer => 'JSON';
 
+our $matrix_list = {};
+
 # got the following matrix from https://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=83333&aa=11&style=N
-our $matrix =
-    q/UUU F 0.57 19.7 (   101)  UCU S 0.11  5.7 (    29)  UAU Y 0.53 16.8 (    86)  UGU C 0.42  5.9 (    30)
+$matrix_list->{'03a479418946cd37b51b29615cca27e0'} = {
+    organism => "E. coli K12",
+    code => q/UUU F 0.57 19.7 (   101)  UCU S 0.11  5.7 (    29)  UAU Y 0.53 16.8 (    86)  UGU C 0.42  5.9 (    30)
 UUC F 0.43 15.0 (    77)  UCC S 0.11  5.5 (    28)  UAC Y 0.47 14.6 (    75)  UGC C 0.58  8.0 (    41)
 UUA L 0.15 15.2 (    78)  UCA S 0.15  7.8 (    40)  UAA * 0.64  1.8 (     9)  UGA * 0.36  1.0 (     5)
 UUG L 0.12 11.9 (    61)  UCG S 0.16  8.0 (    41)  UAG * 0.00  0.0 (     0)  UGG W 1.00 10.7 (    55)
@@ -28,18 +31,29 @@ GUU V 0.25 16.8 (    86)  GCU A 0.11 10.7 (    55)  GAU D 0.65 37.9 (   194)  GG
 GUC V 0.18 11.7 (    60)  GCC A 0.31 31.6 (   162)  GAC D 0.35 20.5 (   105)  GGC G 0.46 33.4 (   171)
 GUA V 0.17 11.5 (    59)  GCA A 0.21 21.1 (   108)  GAA E 0.70 43.7 (   224)  GGA G 0.13  9.2 (    47)
 GUG V 0.40 26.4 (   135)  GCG A 0.38 38.5 (   197)  GAG E 0.30 18.4 (    94)  GGG G 0.12  8.6 (    44)
-/;
+/,
+    source => 'https://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=83333&aa=11&style=N'
+};
 
-my $matrix_parsed = parse_kazusa_matrix(\$matrix);
+sub get_matrices {
+    my @output = ();
 
-print return_gff3("VORNE", translate_aa_2_nucl("AG", $matrix_parsed), "HINTEN", "NAME");
+    foreach my $entrykey (sort (keys %{$matrix_list}))
+    {
+	push(@output, { matrixkey => $entrykey, matrixlabel => $matrix_list->{$entrykey}{organism} });
+    }
+
+    return \@output;
+}
 
 sub parse_kazusa_matrix {
-    my ($ref_matrix) = (@_);
-    unless (defined $ref_matrix)
+    my ($matrix_id) = (@_);
+    unless (exists $matrix_list->{$matrix_id})
     {
-	$ref_matrix = \$matrix;
+	die "Non existent matrix selected!\n";
     }
+
+    my $ref_matrix = \$matrix_list->{$matrix_id}{code};
 
     my $translation = {};
 

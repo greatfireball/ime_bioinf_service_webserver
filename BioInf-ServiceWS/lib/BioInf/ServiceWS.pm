@@ -12,7 +12,7 @@ use MIME::Base64;
 
 use BioInf::ServiceWS::Translate;
 
-our $VERSION = '0.2.4';
+our $VERSION = '0.2.5';
 
 get '/create_wp' => sub {
     template 'create_wp';
@@ -23,7 +23,12 @@ get '/create_wp2' => sub {
 };
 
 get '/optimize_aa' => sub {
-    template 'optimize_aa' => { 'title' => 'Translate amino acid sequence into optimized nucleotid sequences', 'version' => $VERSION };
+
+    template 'optimize_aa' => {
+	'title' => 'Translate amino acid sequence into optimized nucleotid sequences',
+	'version' => $VERSION,
+        'matrixlist' => BioInf::ServiceWS::Translate::get_matrices()
+    };
 };
 
 post '/optimize_aa' => sub {
@@ -31,8 +36,7 @@ post '/optimize_aa' => sub {
 
     use Data::Dumper; print STDERR Dumper($dat);
 
-    my $matrix_parsed = BioInf::ServiceWS::Translate::parse_kazusa_matrix();
-    print STDERR Dumper($matrix_parsed);
+    my $matrix_parsed = BioInf::ServiceWS::Translate::parse_kazusa_matrix($dat->{targetselection});
 
     $dat->{fileprefix} =~ s/_+$//;
     $dat->{filesuffix} =~ s/_+$//;

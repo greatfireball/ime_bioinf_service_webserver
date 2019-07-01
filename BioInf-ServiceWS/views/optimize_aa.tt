@@ -27,7 +27,13 @@
     <div class="bgcinputrow">
       <div class="bgcinputlabel"><label>Please select target organism:</label></div>
       <div class="bgcinputreq">req.</div>
-      <div class="bgcinputfield"><select id="targetselection" name="targetselection"><option>E. coli</option></select></div>
+      <div class="bgcinputfield"><select id="targetselection" name="targetselection">
+	  <% IF matrixlist.size %>
+	  <% FOREACH item IN matrixlist %>
+	  <option value="<% item.matrixkey %>"><% item.matrixlabel %></option>
+	  <% END %>
+	  <% END %>
+      </select></div>
     </div>
 
     <div class="bgcinputrow">
