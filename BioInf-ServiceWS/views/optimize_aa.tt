@@ -5,7 +5,7 @@
   <p>
     Here you are able to create optimized nucleotide sequences for a given amino acid sequence.
   </p>
-  <form name="optimzeaa" method="post" enctype="multipart/form-data">
+  <form name="optimzeaa" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
     <div class="bgcinputrow">
       <div class="bgcinputlabel"><label>Please specify a filename prefix:</label></div>
       <div class="bgcinputreq">req.</div>
@@ -55,3 +55,18 @@
     </div>
   </form>
 </div>
+
+<script>
+  function validateForm() {
+  var x = document.forms["optimzeaa"]["seqname"].value;
+  if (x == "") {
+  alert("Sequence name must be filled out!");
+  return false;
+  }
+  x = document.forms["optimzeaa"]["aaseq"].value;
+  if (x == "") {
+  alert("Amino acid sequence must be filled out!");
+  return false;
+  }
+  }
+</script>
