@@ -42,7 +42,7 @@ sub parse_kazusa_matrix {
     }
 
     my $translation = {};
-    
+
     while ($$ref_matrix =~ /([UTCAG]{3})\s+(.)\s+([0-9.]+)\s+([0-9.]+)\s+[(]\s+(\d+)[)]/g)
     {
 	my $entry = { triplet => $1, aa => $2, fraction => $3*1, num => $4*1, counts => $5+0 };
@@ -71,34 +71,41 @@ sub translate_aa_2_nucl {
 	$output_seq .= $matrix->{$current_aa}{entries}[0]{triplet};
     }
 
+    $output_seq =~ tr/Uu/Tt/;
+
     return $output_seq;
 }
 
 sub return_gff3 {
-    my ($five_prime, $sequence_of_interest, $three_prime, $name) = @_;
+    my ($five_prime, $sequence_of_interest, $three_prime, $name, $file_name) = @_;
 
     $name =~ s/\s/_/g;
 
     my $seq_complete = "";
-    
+
     my $gff  = "##gff-version 3\n";
 
-    foreach my $entry ( 
-	{seq => $five_prime, type => "five_prime_coding_exon_noncoding_region"},
-	{seq => $sequence_of_interest, type => "insertion"},
-	{seq => $three_prime, type => "three_prime_coding_exon_noncoding_region"}
+    foreach my $entry (
+	{seq => $five_prime, type => "five_prime_coding_exon_noncoding_region", id_extention => "five_prime_addition"},
+	{seq => $sequence_of_interest, type => "insertion",  id_extention => ""},
+	{seq => $three_prime, type => "three_prime_coding_exon_noncoding_region",  id_extention => "three_prime_addition"}
 	)
     {
-	$gff          .= join("\t", 
-			      $name, 
-			      "fftool", 
-			      $entry->{type}, 
-			      length($seq_complete)+1, 
-			      length($seq_complete)+length($entry->{seq}), 
-			      ".", 
-			      "+", 
-			      ".", 
-			      "ID=".$name.".".$entry->{type}
+	my $id = $name;
+	if( exists $entry->{id_extention} && "" ne $entry->{id_extention})
+	{
+	    $id .= ".".$entry->{id_extention};
+	}
+	$gff          .= join("\t",
+			      $name,
+			      "fftool",
+			      $entry->{type},
+			      length($seq_complete)+1,
+			      length($seq_complete)+length($entry->{seq}),
+			      ".",
+			      "+",
+			      ".",
+			      "ID=".$id
 	    )."\n";
 	$seq_complete .= $entry->{seq};
     }

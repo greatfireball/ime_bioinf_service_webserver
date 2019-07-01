@@ -1,14 +1,27 @@
 <div id="page">
   <h1>Optimize expression of amino acid sequences</h1>
+  <h2>Version <% version %></h2>
 
   <p>
     Here you are able to create optimized nucleotide sequences for a given amino acid sequence.
   </p>
   <form name="optimzeaa" method="post" enctype="multipart/form-data">
     <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please specify a filename prefix:</label></div>
+      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputfield"><input type="fileprefix" name="fileprefix" value="F1"/></div>
+    </div>
+
+    <div class="bgcinputrow">
       <div class="bgcinputlabel"><label>Please specify a name for the sequence:</label></div>
       <div class="bgcinputreq">req.</div>
       <div class="bgcinputfield"><input type="seqname" name="seqname"/></div>
+    </div>
+
+    <div class="bgcinputrow">
+      <div class="bgcinputlabel"><label>Please specify a filename suffix:</label></div>
+      <div class="bgcinputreq">req.</div>
+      <div class="bgcinputfield"><input type="filesuffix" name="filesuffix" value="ECF"/></div>
     </div>
 
     <div class="bgcinputrow">

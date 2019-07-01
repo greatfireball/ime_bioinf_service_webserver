@@ -12,7 +12,7 @@ use MIME::Base64;
 
 use BioInf::ServiceWS::Translate;
 
-our $VERSION = '0.2.1';
+our $VERSION = '0.2.2';
 
 get '/create_wp' => sub {
     template 'create_wp';
@@ -23,7 +23,7 @@ get '/create_wp2' => sub {
 };
 
 get '/optimize_aa' => sub {
-    template 'optimize_aa';
+    template 'optimize_aa' => { 'title' => 'Translate amino acid sequence into optimized nucleotid sequences', 'version' => $VERSION };
 };
 
 post '/optimize_aa' => sub {
@@ -34,9 +34,19 @@ post '/optimize_aa' => sub {
     my $matrix_parsed = BioInf::ServiceWS::Translate::parse_kazusa_matrix();
     print STDERR Dumper($matrix_parsed);
 
-    my $data = BioInf::ServiceWS::Translate::return_gff3($dat->{fiveprimeseq}, BioInf::ServiceWS::Translate::translate_aa_2_nucl($dat->{aaseq}, $matrix_parsed), $dat->{threeprimeseq}, $dat->{seqname});
+    $dat->{fileprefix} =~ s/_+$//;
+    $dat->{filesuffix} =~ s/_+$//;
+    my $filename_base = join("_", $dat->{fileprefix}, $dat->{seqname}, $dat->{filesuffix});
 
-    return send_file (\$data, filename => $dat->{seqname}.".gff3", content_type => 'text/txt', charset => 'utf-8');
+    my $data = BioInf::ServiceWS::Translate::return_gff3(
+	$dat->{fiveprimeseq},
+	BioInf::ServiceWS::Translate::translate_aa_2_nucl($dat->{aaseq}, $matrix_parsed),
+	$dat->{threeprimeseq},
+	$dat->{seqname},
+	$filename_base
+	);
+
+    return send_file (\$data, filename => $filename_base.".gff3", content_type => 'text/txt', charset => 'utf-8');
 };
 
 post '/create_w*' => sub {
